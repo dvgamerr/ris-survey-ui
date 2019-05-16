@@ -8,8 +8,8 @@ module.exports = async (req, res) => {
   try {
     let sql = `
     SELECT * FROM (
-      SELECT ROW_NUMBER() OVER (ORDER BY g.dCreated DESC) AS nRow
-        , t.sTitleName, g.sKey, sUsername, sName, g.dCreated, MAX(g.dModified) dModified
+      SELECT ROW_NUMBER() OVER (ORDER BY MIN(g.dCreated) DESC) AS nRow
+        , t.sTitleName, g.sKey, sUsername, sName, MIN(g.dCreated) dCreated, MAX(g.dModified) dModified
         , SUM(CASE WHEN sStatus = 'FAIL' THEN 1 ELSE 0 END) nFail
         , SUM(CASE WHEN sStatus = 'WARN' THEN 1 ELSE 0 END) nWarn
         , SUM(CASE WHEN sStatus = 'INFO' THEN 1 ELSE 0 END) nInfo
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
       ) g ON g.nIndex = s.nIndex
 	  INNER JOIN UserTaskDetail d ON d.nTaskDetailId = s.nTaskDetailId
 	  INNER JOIN UserTask t ON t.nTaskId = d.nTaskId
-      GROUP BY t.sTitleName, g.sKey, sUsername, sName, g.dCreated
+      GROUP BY t.sTitleName, g.sKey, sUsername, sName
     ) AS r WHERE nRow >= ${page} * 100 - 99 AND nRow <= ${page} * 100
     `
     pool = await mssql()

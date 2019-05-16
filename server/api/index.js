@@ -2,6 +2,8 @@
 const { Router } = require('express')
 const router = Router()
 
+require('./approve/check-list')()
+
 router.get('/history/detail/:id', require('./history/detail'))
 router.get('/history', require('./history'))
 router.get('/history/:id', require('./history/id'))
@@ -11,6 +13,5 @@ router.get('/history/version/:id', require('./history/version'))
 router.post('/history/submit', require('./history/submit'))
 
 router.get('/monitor/check-hour/:hour', require('./monitor/check-hour'))
-router.put('/logs/:app/:group/:status/:msg?', require('./logs/append'))
 
 module.exports = router
