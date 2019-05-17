@@ -10,12 +10,13 @@ const moment = require('moment')
 const posweb01 = `http://s-thcw-posweb01.pos.cmg.co.th:3000`
 
 const main = async () => {
-  const loop = () => setTimeout(() => main(), 1000)
-
+  const loop = (time) => setTimeout(() => main(), time)
+  let loopTime = 200
   let pool = { close: () => {} }
-  let data = await request(`${posweb01}/db/ris-sd3/cmd`, { json: true })
-  if (!data || data.length === 0) return loop()
   try {
+    let data = await request(`${posweb01}/db/ris-sd3/cmd`, { json: true })
+    if (!data || data.length === 0) return loop(1000)
+    
     for (const cmd of data) {
       if (cmd.command !== 'survey' || !cmd.args) continue
       await request.post(`${posweb01}/db/ris-sd3/cmd/${cmd._id}`, { json: true })
@@ -70,13 +71,14 @@ const main = async () => {
         }
       }
     }
+    loopTime = 100
   } catch (ex) {
     logger.error(ex)
+    loopTime = 30000
   } finally {
     pool.close()
   }
-  return loop()
+  return loop(loopTime)
 }
-
 
 module.exports = main
