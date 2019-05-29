@@ -1,7 +1,7 @@
 module.exports = (msg, wait, error, date, zip, avg, uptime) => {
   let header = [
-    { type: 'text', text: 'InboundTransfer', color: '#363636', size: 'md', weight: 'bold' },
-    { type: 'text', margin: 'xs', text: '(', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 }
+    { type: 'text', text: 'Inbound Transfer', color: '#333333', size: 'md', weight: 'bold' },
+    { type: 'text', margin: 'xs', text: '(', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 }
   ]
 
   if (!error && !wait) {
@@ -12,14 +12,14 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
       header.push({ type: 'text', margin: 'xs', text: String(error), color: '#F44336', weight: 'bold', size: 'xxs', flex: 0 })
     }
     if (error && wait) {
-      header.push({ type: 'text', margin: 'xs', text: ',', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 })
+      header.push({ type: 'text', margin: 'xs', text: ',', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 })
     }
     if (wait) {
       header.push({ type: 'text', margin: 'xs', text: 'WAIT', color: '#FF9800', size: 'xxs', weight: 'bold', flex: 0 })
       header.push({ type: 'text', margin: 'xs', text: String(wait), color: '#FF9800', weight: 'bold', size: 'xxs', flex: 0 })
     }
   }
-  header.push({ type: 'text', margin: 'xs', text: ')', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 })
+  header.push({ type: 'text', margin: 'xs', text: ')', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 })
 
   let flexMessage = {
     type: 'bubble',
