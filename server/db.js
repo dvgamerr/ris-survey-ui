@@ -21,5 +21,11 @@ module.exports = {
     options: {
       encrypt: true
     }
+  },
+  'rep': {
+    user: 'posquery',
+    password: `ycmgquer`,
+    server: 'posdbrep.cmg.co.th',
+    database: 'POSGW'
   }
 }

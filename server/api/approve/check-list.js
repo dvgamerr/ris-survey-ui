@@ -73,7 +73,7 @@ const main = async () => {
     }
     loopTime = 100
   } catch (ex) {
-    logger.error(ex)
+    console.log(ex)
     loopTime = 30000
   } finally {
     pool.close()

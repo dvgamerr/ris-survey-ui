@@ -13,5 +13,6 @@ router.get('/history/version/:id', require('./history/version'))
 router.post('/history/submit', require('./history/submit'))
 
 router.get('/monitor/check-hour/:hour', require('./monitor/check-hour'))
+router.get('/monitor/inbound-transfer', require('./monitor/inbound-transfer'))
 
 module.exports = router
