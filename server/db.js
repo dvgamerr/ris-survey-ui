@@ -27,5 +27,11 @@ module.exports = {
     password: `ycmgquer`,
     server: 'posdbrep.cmg.co.th',
     database: 'POSGW'
+  },
+  'staging': {
+    user: 'T1CAdmin',
+    password: `T!C@dmin`,
+    server: '10.101.147.70\\cmgstaging',
+    database: 'POSSTAGING'
   }
 }
