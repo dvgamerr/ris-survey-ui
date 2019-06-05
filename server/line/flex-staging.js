@@ -1,4 +1,4 @@
-module.exports = (msg, wait, error, date, zip, avg, uptime) => {
+module.exports = (msg, usage, task, mSuccess, max, sales, tSuccess) => {
 
   let flexMessage = {
     type: 'bubble',
@@ -15,7 +15,7 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
           contents: [
             { type: 'text', text: 'Staging Master', color: '#333333', size: 'sm', weight: 'bold' },
             { type: 'text', margin: 'xs', text: '(', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 },
-            { type: 'text', margin: 'xs', text: 'OK', color: '#4caf50', size: 'xxs', weight: 'bold', flex: 0 },
+            { type: 'text', margin: 'xs', text: mSuccess ? 'OK' : 'WARN', color: mSuccess ? '#4caf50' : '#FF9800', size: 'xxs', weight: 'bold', flex: 0 },
             { type: 'text', margin: 'xs', text: ')', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 }
           ]
         },
@@ -40,7 +40,7 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
                   type: 'box',
                   layout: 'baseline',
                   contents: [
-                    { type: 'text', text: '15', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
+                    { type: 'text', text: String(task), color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
                     { type: 'text', text: 'rows', color: '#969696', margin: 'sm', size: 'xxs' }
                   ]
                 }
@@ -62,7 +62,7 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
                   type: 'box',
                   layout: 'baseline',
                   contents: [
-                    { type: 'text', text: '4', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
+                    { type: 'text', text: String(usage), color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
                     { type: 'text', text: 'mins', color: '#969696', margin: 'sm', size: 'xxs' }
                   ]
                 }
@@ -75,40 +75,10 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
           margin: 'sm',
           layout: 'baseline',
           contents: [
-            {
-              type: 'text',
-              text: 'Staging Transection',
-              color: '#333333',
-              size: 'sm',
-              weight: 'bold'
-            },
-            {
-              type: 'text',
-              margin: 'xs',
-              text: '(',
-              color: '#333333',
-              size: 'xxs',
-              weight: 'bold',
-              flex: 0
-            },
-            {
-              type: 'text',
-              margin: 'xs',
-              text: 'OK',
-              color: '#4caf50',
-              size: 'xxs',
-              weight: 'bold',
-              flex: 0
-            },
-            {
-              type: 'text',
-              margin: 'xs',
-              text: ')',
-              color: '#333333',
-              size: 'xxs',
-              weight: 'bold',
-              flex: 0
-            }
+            { type: 'text', text: 'Staging Transection', color: '#333333', size: 'sm', weight: 'bold' },
+            { type: 'text', margin: 'xs', text: '(', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 },
+            { type: 'text', margin: 'xs', text: tSuccess === 0 ? 'OK' : 'WARN ' + tSuccess, color: tSuccess === 0 ? '#4caf50' : '#FF9800', size: 'xxs', weight: 'bold', flex: 0 },
+            { type: 'text', margin: 'xs', text: ')', color: '#333333', size: 'xxs', weight: 'bold', flex: 0 }
           ]
         },
         {
@@ -132,7 +102,7 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
                   type: 'box',
                   layout: 'baseline',
                   contents: [
-                    { type: 'text', text: '0', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
+                    { type: 'text', text: String(sales), color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
                     { type: 'text', text: 'rows', color: '#969696', margin: 'sm', size: 'xxs' }
                   ]
                 }
@@ -154,7 +124,7 @@ module.exports = (msg, wait, error, date, zip, avg, uptime) => {
                   type: 'box',
                   layout: 'baseline',
                   contents: [
-                    { type: 'text', text: '0', color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
+                    { type: 'text', text: String(max), color: '#363636', size: 'xxs', weight: 'bold', flex: 0 },
                     { type: 'text', text: 'mins.', color: '#969696', margin: 'sm', size: 'xxs' }
                   ]
                 }

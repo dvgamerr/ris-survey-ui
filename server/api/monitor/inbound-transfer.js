@@ -15,12 +15,12 @@ module.exports = async (req, res) => {
   try {
     let command = `
     SELECT 'wait' sStatus, CONVERT(VARCHAR,COUNT(*)) nTotal FROM POSGW..TFileTransUp a WITH(NOLOCK)
-    WHERE a.sStatus IN (3,5) AND
+    WHERE a.sStatus IN (3,5) AND ISNULL(sErrorProcess, '') = '' AND
       CONVERT(DATE,STUFF(STUFF(CONVERT(VARCHAR(8), nStartDate),5,0,'-'),8,0,'-')+' '
       +STUFF(STUFF(LEFT(RIGHT('000000' + CONVERT(VARCHAR(6), nStartTime), 6),6),3,0,':'),6,0,':'),120) < CONVERT(DATE, GETDATE())
     UNION ALL 
     SELECT 'error', CONVERT(VARCHAR,COUNT(*)) FROM POSGW..TFileTransUp a WITH(NOLOCK)
-    WHERE a.sStatus IN (4,6,999) AND
+    WHERE (a.sStatus IN (4,6,999) OR sErrorProcess <> '') AND
       CONVERT(DATE,STUFF(STUFF(CONVERT(VARCHAR(8), nStartDate),5,0,'-'),8,0,'-')+' '
       +STUFF(STUFF(LEFT(RIGHT('000000' + CONVERT(VARCHAR(6), nStartTime), 6),6),3,0,':'),6,0,':'),120) = CONVERT(DATE, DATEADD(DAY, -1, GETDATE()))
 	UNION ALL

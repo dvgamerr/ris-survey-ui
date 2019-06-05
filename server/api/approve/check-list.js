@@ -14,7 +14,10 @@ const main = async () => {
   let loopTime = 200
   let pool = { close: () => {} }
   try {
-    let data = await request(`${posweb01}/db/ris-sd3/cmd`, { json: true })
+    let data = null
+    try {
+      data = await request(`${posweb01}/db/ris-sd3/cmd`, { json: true })
+    } catch { }
     if (!data || data.length === 0) return loop(1000)
     
     for (const cmd of data) {

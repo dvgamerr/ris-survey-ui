@@ -70,12 +70,11 @@ module.exports = async (req, res) => {
     HAVING COUNT(*) < 2
     ) a
     `)
-    tSuccess = Number(tSuccess['t']) === 0
+    tSuccess = Number(tSuccess['t'])
 
-    let msg = `${mSuccess && tSuccess ? 'OK' : 'WARN'} : POSDB Staging Health Check`
-    let flex = lineInbound(msg, wait, error, date, zips, avg.toFixed(0), uptime.toFixed(0))
-
-    await LINE(flex, 'ris-sd3', 'C4af566ba4cf77cbc04dd1eff2f3bda38')
+    let msg = `${mSuccess && tSuccess === 0 ? 'OK' : 'WARN'} : POSDB Staging Health Check`
+    let flex = lineStaging(msg, usage, task, mSuccess, max, sales, tSuccess)
+    await LINE(flex, 'ris-sd3', 'U9e0a870c01ca97da20a4ec462bf72991')
 
   } catch (ex) {
     logger.error(ex)
