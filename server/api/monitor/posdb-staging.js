@@ -74,7 +74,7 @@ module.exports = async (req, res) => {
 
     let msg = `${mSuccess && tSuccess === 0 ? 'OK' : 'WARN'} : POSDB Staging Health Check`
     let flex = lineStaging(msg, usage, task, mSuccess, max, sales, tSuccess)
-    await LINE(flex, 'ris-sd3', 'U9e0a870c01ca97da20a4ec462bf72991')
+    await LINE(flex, 'ris-sd3', 'C4af566ba4cf77cbc04dd1eff2f3bda38')
 
   } catch (ex) {
     logger.error(ex)
