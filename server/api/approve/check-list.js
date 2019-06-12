@@ -45,9 +45,9 @@ const main = async () => {
           pool = await mssql()
 
           sql = `SELECT nTaskDetailId, sSubject, ISNULL(sDetail,'') sDetail, sDescription, sSolve, nOrder
-            FROM UserTaskDetail d
-            INNER JOIN UserTask t ON t.nTaskId = d.nTaskId
-            WHERE d.bEnabled = 1 AND t.nTaskId = 1 ORDER BY nOrder ASC`
+          FROM UserTaskDetail d
+          INNER JOIN UserTask t ON t.nTaskId = d.nTaskId
+          WHERE d.bEnabled = 1 AND t.nTaskId = 1 ORDER BY nOrder ASC`
           let [ records ] = (await pool.request().query(sql)).recordsets
 
           let survey = records.map(e => {

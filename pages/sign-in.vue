@@ -12,7 +12,7 @@
         <div class="login-form">
           <form method="post" @submit.prevent="onLogin">
             <div class="form-group">
-              <label>ADUser or Email</label>
+              <label>User or Email</label>
               <input v-model="username" type="text" class="form-control" placeholder="@central.co.th">
             </div>
             <div class="form-group">
@@ -51,6 +51,7 @@ export default {
         }
       }).catch(ex => {
         this.submitted = false
+        this.$router.replace('/')
         this.$toast.error(ex.message, { duration: 5000 })
         console.log(ex)
       })

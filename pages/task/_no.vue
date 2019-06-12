@@ -1,5 +1,5 @@
 <script>
-import index from '../../list.vue'
+import index from '../list.vue'
 export default index
 </script>
 

@@ -1,8 +1,15 @@
 module.exports = {
   'dev': {
-    user: 'sa',
-    password: 'asdasdasd',
-    server: 'RISHSLTSD3NBZXD',
+    user: 'ChSorayuth',
+    password: '44662288',
+    server: 'RISHSLTSD3NB1FP',
+    database: 'SURVEY_CMG',
+    options: { }
+  },
+  'dev2': {
+    user: 'posappadm',
+    password: 'qwerty8*',
+    server: '10.0.80.46\\poscmg',
     database: 'SURVEY_CMG',
     options: {}
   },

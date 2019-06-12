@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
       delete e['sRemark']
       return e
     })
-    return res.json({ editor: editor.join(', '), records: records })
+    res.json({ editor: editor.join(', '), records: records })
   } catch (ex) {
     logger.error(ex)
   } finally {
