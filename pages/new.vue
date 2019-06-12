@@ -9,7 +9,7 @@
                 <h3>Title :</h3>
               </b-col>
               <b-col sm="31">
-                <b-form-input placeholder="Enter your Title"></b-form-input>
+                <b-form-input placeholder="Enter your Title" />
               </b-col>
               <b-col>
                 <b-button variant="success" @click="addNewlist">Add new list +</b-button>
@@ -18,21 +18,21 @@
             <hr>
           </div>
           <div class="row mb-5 pb-5">
-            <div class="col-sm-36" v-for="(item, i) in list" :key="i">
+            <div v-for="(item, i) in list" :key="i" class="col-sm-36">
               <b-container fluid>
-                <span class="float-right" @click="delNewlist" style="cursor:pointer">X</span>
+                <span class="float-right" style="cursor:pointer" @click="delNewlist">X</span>
                 <div class="list-form">
                   <b-row>
                     <b-col sm="3">
-                      <label class="card-title">{{(i+1)}}.</label>
+                      <label class="card-title">{{ (i+1) }}.</label>
                     </b-col>
                     <b-col sm="9">
                       <b-form-input
+                        v-model="item.id"
                         type="text"
                         class="sublist-form"
-                        v-model="item.id"
                         placeholder="Enter your List"
-                      ></b-form-input>
+                      />
                     </b-col>
                   </b-row>
                 </div>
@@ -41,7 +41,7 @@
             <div class="survey-submit">
               <div class="container">
                 <div class="row">
-                  <div class="col-md-18"></div>
+                  <div class="col-md-18" />
                   <div class="col-md-18 text-right">
                     <b-button
                       type="submit"
@@ -54,14 +54,18 @@
                       type="reset"
                       :disabled="submited"
                       variant="danger"
-                    >Reset</b-button>
+                    >
+                      Reset
+                    </b-button>
                     <nuxt-link
                       v-else
                       tag="button"
                       to="/"
                       type="button"
                       class="btn btn-secondary"
-                    >Back</nuxt-link>
+                    >
+                      Back
+                    </nuxt-link>
                   </div>
                 </div>
               </div>

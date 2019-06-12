@@ -4,7 +4,7 @@
       <b-row>
         <div class="col-md-25">
           <h3>All List :</h3>
-          <div class="category-list" v-for="(e, i) in tasks" :key="e.nTaskId">
+          <div v-for="(e, i) in tasks" :key="e.nTaskId" class="category-list">
             <a href="list/" @click.prevent="onView(e.nTaskId)">
               <h4>{{ (i + 1) }}. {{ e.sTitleName }}</h4>
             </a>
