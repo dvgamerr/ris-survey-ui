@@ -9,11 +9,15 @@
                 <h3>Title :</h3>
               </b-col>
               <b-col sm="31">
-                <b-form-input placeholder="Enter your Title" />
+                <b-form-input v-model="Titlename" placeholder="Enter your Title" />
               </b-col>
-              <b-col>
-                <b-button variant="success" @click="addNewlist">Add new list +</b-button>
-              </b-col>
+              <b-button
+                type="button"
+                size="ssm"
+                :variant="'outline-info'"
+                @click="addNewlist"
+                v-text="'Add new list +'"
+              />
             </b-row>
             <hr>
           </div>
@@ -49,16 +53,7 @@
                       variant="primary"
                       v-text="submited ? 'Approving...' : taskKey = 'Submit'"
                     />
-                    <b-button
-                      v-if="!taskKey"
-                      type="reset"
-                      :disabled="submited"
-                      variant="danger"
-                    >
-                      Reset
-                    </b-button>
                     <nuxt-link
-                      v-else
                       tag="button"
                       to="/"
                       type="button"
@@ -84,12 +79,7 @@ export default {
     taskKey: null,
     submited: false,
     current: moment(),
-    list: [
-      {
-        id: ""
-      }
-    ],
-    tasks: []
+    list: [{id: ""}]
   }),
   computed: {
     getTaskDateTime() {
@@ -100,78 +90,14 @@ export default {
     getDateTime() {
       return this.current.format("DD MMMM YYYY HH:mm:ss");
     },
-    getTaskUncheck() {
-      return this.tasks.length - this.getTaskSuccess - this.getTaskProblem;
-    },
-    getTaskSuccess() {
-      return this.tasks.filter(e => e.selected).length;
-    },
-    getTaskProblem() {
-      return this.problem;
-    }
-  },
-  async asyncData({ redirect, params, $axios }) {
-    if (params.id) {
-      let sKey = parseInt(params.id);
-
-      if (sKey == NaN) return redirect("/history");
-      let { data } = await $axios("/api/history/" + params.id);
-
-      if (!data.records) return redirect("/history");
-      return { editor: data.editor, tasks: data.records, taskKey: params.id };
-    }
-    if (params.no) {
-      let sKey = parseInt(params.no);
-      if (sKey == NaN) return redirect("/history");
-      else {
-        let { data } = await $axios("/api/history/detail/" + params.no);
-        return { title: data.title, tasks: data.tasks, taskKey: null };
-      }
-    }
   },
   methods: {
-    onSave() {
-      if (!this.taskKey && process.client && this.tasks) {
-        this.$nextTick(
-          (() => {
-            window.localStorage.setItem(
-              "survey.tasks",
-              JSON.stringify(this.tasks)
-            );
-          }).bind(this)
-        );
-      }
-    },
-    onReset() {
-      if (!this.taskKey) {
-        for (const e of this.tasks) {
-          e.newSubList = "";
-        }
-        this.$forceUpdate();
-        if (process.client && this.tasks)
-          window.localStorage.removeItem("survey.tasks");
-      }
-    },
     onSubmit() {
       let vm = this;
-      let data = vm.tasks.map(e => {
-        return {
-          nTaskDetailId: e.nTaskDetailId,
-          nOrder: e.nOrder,
-          sSubject: e.sSubject,
-          selected: e.selected,
-          status: e.problem ? e.status : "",
-          problem: e.problem || false,
-          reason: e.problem ? e.reason : ""
-        };
-      });
       this.submited = true;
       vm.$axios
-        .post("/api/history/submit", {
-          key: vm.taskKey,
-          username: vm.$auth.user.user_name,
-          name: vm.$auth.user.name,
-          tasks: vm.tasks
+        .post("/api/history/new", {
+          
         })
         .then(({ data }) => {
           if (data.success) {
@@ -180,7 +106,7 @@ export default {
               vm.onReset();
             } else {
               vm.$toast.success("Task Updated.");
-              vm.$router.push("/history");
+              vm.$router.push("/");
             }
           } else {
             vm.$toast.error("Error API");
@@ -190,6 +116,7 @@ export default {
         .catch(ex => {
           vm.$toast.error(ex.message);
           this.submited = false;
+          console.log(TitleName)
         });
     },
     addNewlist() {

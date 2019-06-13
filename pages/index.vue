@@ -12,7 +12,9 @@
         </div>
         <div class="col-md-11">
           <a href="new/">
-            <b-button variant="outline-primary">&lt;&lt;&nbsp;&nbsp; Add New + &nbsp;&nbsp;>></b-button>
+            <b-button variant="outline-primary">
+              <b>&nbsp;&nbsp; Add New Title + &nbsp;&nbsp;</b>
+            </b-button>
           </a>
         </div>
       </b-row>
@@ -27,16 +29,8 @@ export default {
     tasks: []
   }),
   async asyncData({ redirect, params, $axios }) {
-    if (params.id) {
-      let sKey = parseInt(params.id);
-      if (sKey == NaN) return redirect("/history");
-      let { data } = await $axios("/api/history/" + params.id);
-      if (!data.records) return redirect("/history");
-      return { editor: data.editor, tasks: data.records, taskKey: params.id };
-    } else {
-      let { data } = await $axios("/api/history/home/1");
-      return { tasks: data.tasks, taskKey: null };
-    }
+    let { data } = await $axios("/api/history/home/1");
+    return { tasks: data.tasks, taskKey: null };
   },
   methods: {
     onView(e) {
