@@ -5,7 +5,7 @@ const moment = require('moment')
 const LINE = require('@line')
 
 module.exports = async (req, res) => {
-  let pool = { close: () => {} }
+  let pool = { close: () => { } }
   try {
     let { key, name, username, tasks } = req.body
     let created = moment() // 2019-03-01 18:04:09.503
@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
             WHERE dCheckIn = CONVERT(DATETIME, '${dCheckIn.format('YYYY-MM-DD HH:mm:ss.SSS')}') AND nTaskDetailId = ${e.nTaskDetailId}
           ) i ON i.nIndex = s.nIndex
         `
-        let [ [ record ] ] = (await pool.request().query(checkRow)).recordsets
+        let [[record]] = (await pool.request().query(checkRow)).recordsets
         let sStatus = record['sStatus'] === (e.problem ? e.status : 'PASS')
         let sRemark = record['sRemark'] === (e.reason || '')
         if (!sStatus || !sRemark) {
@@ -37,18 +37,18 @@ module.exports = async (req, res) => {
 
       if (!key || isUpdated) {
         let command = `INSERT INTO [dbo].[UserTaskSubmit] ([nTaskDetailId],[sUsername],[sName],[sStatus],[sRemark],[nType],[nOrder],[dCheckIn],[dCreated],[nVersion])
-          VALUES (${e.nTaskDetailId},'${username.trim()}','${name}','${e.problem ? e.status : 'PASS'}', '${(e.reason || '').replace(`'`,`\'`)}'
+          VALUES (${e.nTaskDetailId},'${username.trim()}','${name}','${e.problem ? e.status : 'PASS'}', '${(e.reason || '').replace(`'`, `\'`)}'
           , 1, ${e.nOrder}, CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121),  GETDATE(), ${nVersion})
         `
         await pool.request().query(command)
         updated.push(e)
       }
     }
-    
+
     let totalFail = tasks.filter(e => e.status === 'FAIL').length
     let totalWarn = tasks.filter(e => e.status === 'WARN').length
     let totalInfo = tasks.filter(e => e.status === 'INFO').length
-  
+
     let topName = `Summary Monitor DailyClose`
     let topStatus = (totalFail > 0) ? 'FAIL' : totalWarn > 0 ? 'WARN' : totalInfo > 0 ? 'INFO' : 'PASS'
     let topDate = moment().format('HH:mm, DD MMM YYYY')

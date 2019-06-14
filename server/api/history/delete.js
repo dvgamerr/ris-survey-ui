@@ -5,7 +5,7 @@ const moment = require('moment')
 module.exports = async (req, res) => {
   let key = parseInt(req.params.id)
   if (isNaN(key)) return res.json({})
-  let pool = { close: () => {} }
+  let pool = { close: () => { } }
   logger.info('History ID:', req.params.id, 'Deleted.')
   let dCheckIn = moment(req.params.id, 'YYYYMMDDHHmmssSSS')
   if (!moment.isMoment(dCheckIn)) return res.json({})

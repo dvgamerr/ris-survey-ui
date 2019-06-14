@@ -4,25 +4,25 @@ const numeral = require('numeral')
 const isDev = process.env.NODE_ENV !== 'production'
 
 class Time {
-  constructor () {
+  constructor() {
     this._core = process.hrtime()
     this._total = 0
   }
-  nanoseconds () {
+  nanoseconds() {
     let hr = process.hrtime(this._core)
     const nanoseconds = (hr[0] * 1e9) + hr[1]
     this._core = process.hrtime()
     this._total += nanoseconds
     return `${numeral((nanoseconds / 1e6)).format('0,0')}ms`
   }
-  seconds () {
+  seconds() {
     let hr = process.hrtime(this._core)
     const nanoseconds = (hr[0] * 1e9) + hr[1]
     this._core = process.hrtime()
     this._total += nanoseconds
     return `${numeral((nanoseconds / 1e9)).format('0,0.00')}s`
   }
-  total () {
+  total() {
     let hr = process.hrtime(this._core)
     const nanoseconds = (hr[0] * 1e9) + hr[1]
     this._core = process.hrtime()
@@ -38,7 +38,7 @@ const groupPadding = (msg, size, pad) => {
 }
 
 const logWindows = (scope, icon, title, color, msg) => {
-  let msg2 = [ chalk.gray(moment().format('HH:mm:ss.SSS')), color(icon) ]
+  let msg2 = [chalk.gray(moment().format('HH:mm:ss.SSS')), color(icon)]
   msg2.push(color(groupPadding(title, groupSize, 'padStart')))
   if (scope) {
     msg2.push(groupPadding(scope, scopeSize, 'padEnd'))
@@ -48,7 +48,7 @@ const logWindows = (scope, icon, title, color, msg) => {
 }
 
 const logLinux = (scope, icon, msg) => {
-  let msg2 = [ moment().format('YYYY-MM-DD HH:mm:ss.SSS'), (!icon ? '…' : icon) ]
+  let msg2 = [moment().format('YYYY-MM-DD HH:mm:ss.SSS'), (!icon ? '…' : icon)]
   if (scope) msg2.push(`[${scope.toUpperCase()}]`)
   console.log(...(msg2.concat(msg)))
 }
@@ -56,7 +56,7 @@ const logLinux = (scope, icon, msg) => {
 module.exports = scopeName => {
   let measure = null
   return {
-    log (...msg) {
+    log(...msg) {
       // let msg2 = [ chalk.gray(moment().format('HH:mm:ss.SSS')), chalk.gray.bold('…') ]
       // msg2.push(measure ? groupPadding(measure.nanoseconds(), groupSize, 'padStart') : chalk.gray.bold(groupPadding('debug', groupSize, 'padStart')))
       // if (scopeName) {
@@ -66,30 +66,30 @@ module.exports = scopeName => {
       // console.log(...(msg2.concat(msg)))
       if (isDev) logWindows(scopeName, '…', 'debug', chalk.gray.bold, msg); else logLinux(scopeName, '…', msg)
     },
-    start (...msg) {
+    start(...msg) {
       // measure = new Time()
       if (isDev) logWindows(scopeName, '○', 'start', chalk.cyan.bold, msg); else logLinux(scopeName, '○', msg)
     },
-    success (...msg) {
+    success(...msg) {
       // if (measure) msg.push(`(${measure.total()})`)
       if (isDev) logWindows(scopeName, '●', 'success', chalk.green.bold, msg); else logLinux(scopeName, '●', msg)
       // measure = null
     },
-    warning (...msg) {
+    warning(...msg) {
       if (isDev) logWindows(scopeName, '▲', 'warning', chalk.yellow.bold, msg); else logLinux(scopeName, '▲', msg)
       // measure = null
     },
-    info (...msg) {
+    info(...msg) {
       if (isDev) logWindows(scopeName, '╍', 'info', chalk.blue.bold, msg); else logLinux(scopeName, null, msg)
     },
-    async error (ex) {
+    async error(ex) {
       if (!ex) return
       if (ex instanceof Error) {
         let excep = /at.*?\((.*?)\)/i.exec(ex.stack) || []
-        logLinux(scopeName, 'х', [ ex.message.indexOf('Error:') === 0 ? ex.message.replace('Error:', 'ERROR-Message:') : `ERROR-Message: ${ex.message}` ])
-        logLinux(scopeName, 'х', [ `ERROR-File: ${excep[1] ? excep[1] : 'N/A'}`, ex.message ])
+        logLinux(scopeName, 'х', [ex.message.indexOf('Error:') === 0 ? ex.message.replace('Error:', 'ERROR-Message:') : `ERROR-Message: ${ex.message}`])
+        logLinux(scopeName, 'х', [`ERROR-File: ${excep[1] ? excep[1] : 'N/A'}`, ex.message])
       } else {
-        let msg = [ ex.toString() ]
+        let msg = [ex.toString()]
         if (measure) msg.push(`(${measure.total()})`)
         if (isDev) logWindows(scopeName, 'х', 'error', chalk.red.bold, msg); else logLinux(scopeName, 'х', msg)
       }

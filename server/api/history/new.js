@@ -3,37 +3,37 @@ const mssql = require('@mssql')
 const moment = require('moment')
 
 module.exports = async (req, res) => {
-  let pool = { close: () => {} }
+  let pool = { close: () => { } }
   try {
+    let { tasks, titleName } = req.body
     let created = moment() // 2019-03-01 18:04:09.503
+    let updated = []
     pool = await mssql()
-      if (key) {
-        let dCheckIn = moment(key, 'YYYYMMDDHHmmssSSS')
-        created = dCheckIn
-        let checkRow = `
-        SELECT max(nTaskID) from UserTask
-        `
-        let [ [ record ] ] = (await pool.request().query(checkRow)).recordsets
-          nTaskId = parseInt(record['[nTaskId']) + 1
-        }
 
-      if (!key || isUpdated) {
-        let command = `INSERT INTO [dbo].[UserTask]
-           ([nTaskId],[sTitleName],[nLevelPermission],[bEnabled],[dCreated])
-        VALUES
-           (${nTaskId},${sTitleName},0,True,CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}')
-        `
-        // let command = `INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId]
-        //   ,[nTaskId]//หมวดหมู่*
-        //   ,[sSubject]//title*
-        //   ,[nOrder]//เรียงหัวข้อในหมวดหมู่
-        //   ,[bEnabled]=Trueเสมอ
-        //   ,[dCreated]//getdate))
-        //   VALUES (${e.nTaskId},'${e.sSubject}','${e.nOrder}','True', CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}')
-        // `
-        await pool.request().query(command)
-        updated.push(e)
-      }
+    let checkRow = `SELECT max(nTaskID) n from UserTask`
+    let [[record]] = (await pool.request().query(checkRow)).recordsets
+    nTaskId = record.n + 1
+
+    let command1 = `INSERT INTO [dbo].[UserTask]
+             ([nTaskId],[sTitleName],[nLevelPermission],[bEnabled],[dCreated])
+          VALUES
+             ('${nTaskId}','${titleName}',0,1,CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}'))
+          `
+    await pool.request().query(command1)
+    let checkTaskDetail = `SELECT max(nTaskDetailID) n from UserTaskDetail`
+    let [[newrecord]] = (await pool.request().query(checkTaskDetail)).recordsets
+    checkTaskDetail = newrecord.n + 1
+    let i = 0
+    for (const e of tasks) {
+      i += 1
+      checkTaskDetail += 1
+
+      let command2 = `INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId],[nTaskId],[sSubject],[nOrder],[bEnabled],[dCreated])
+      VALUES ('${checkTaskDetail}','${nTaskId}','${e.sSubject}','${i}','True', CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}'))
+    `
+      await pool.request().query(command2)
+      updated.push(e)
+    }
     res.json({ success: true })
   } catch (ex) {
     logger.error(ex)

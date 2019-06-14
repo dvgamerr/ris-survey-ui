@@ -9,7 +9,7 @@
                 <h3>Title :</h3>
               </b-col>
               <b-col sm="31">
-                <b-form-input v-model="Titlename" placeholder="Enter your Title" />
+                <b-form-input v-model="titleName" placeholder="Enter your Title" />
               </b-col>
               <b-button
                 type="button"
@@ -22,7 +22,7 @@
             <hr>
           </div>
           <div class="row mb-5 pb-5">
-            <div v-for="(item, i) in list" :key="i" class="col-sm-36">
+            <div v-for="(e, i) in tasks" :key="i" class="col-sm-36">
               <b-container fluid>
                 <span class="float-right" style="cursor:pointer" @click="delNewlist">X</span>
                 <div class="list-form">
@@ -30,9 +30,9 @@
                     <b-col sm="3">
                       <label class="card-title">{{ (i+1) }}.</label>
                     </b-col>
-                    <b-col sm="9">
+                    <b-col sm="30">
                       <b-form-input
-                        v-model="item.id"
+                        v-model="e.sSubject"
                         type="text"
                         class="sublist-form"
                         placeholder="Enter your List"
@@ -53,14 +53,7 @@
                       variant="primary"
                       v-text="submited ? 'Approving...' : taskKey = 'Submit'"
                     />
-                    <nuxt-link
-                      tag="button"
-                      to="/"
-                      type="button"
-                      class="btn btn-secondary"
-                    >
-                      Back
-                    </nuxt-link>
+                    <nuxt-link tag="button" to="/" type="button" class="btn btn-secondary">Back</nuxt-link>
                   </div>
                 </div>
               </div>
@@ -79,7 +72,8 @@ export default {
     taskKey: null,
     submited: false,
     current: moment(),
-    list: [{id: ""}]
+    titleName: "",
+    tasks: [{ sSubject: "" }]
   }),
   computed: {
     getTaskDateTime() {
@@ -89,15 +83,22 @@ export default {
     },
     getDateTime() {
       return this.current.format("DD MMMM YYYY HH:mm:ss");
-    },
+    }
   },
   methods: {
     onSubmit() {
       let vm = this;
+      let data = vm.tasks.map(e => {
+        return {
+          sSubject: e.sSubject
+        };
+      });
       this.submited = true;
       vm.$axios
         .post("/api/history/new", {
-          
+          key: vm.taskKey,
+          tasks: vm.tasks,
+          titleName: vm.titleName
         })
         .then(({ data }) => {
           if (data.success) {
@@ -116,16 +117,15 @@ export default {
         .catch(ex => {
           vm.$toast.error(ex.message);
           this.submited = false;
-          console.log(TitleName)
         });
     },
     addNewlist() {
-      this.list.push({
+      this.tasks.push({
         id: ""
       });
     },
     delNewlist(i) {
-      this.list.splice(i, 1);
+      this.tasks.splice(i, 1);
     }
   }
 };

@@ -40,7 +40,7 @@ module.exports = (msg) => {
     }
   }
 
-  
+
   return {
     type: 'flex',
     altText: msg,

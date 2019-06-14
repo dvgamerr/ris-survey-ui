@@ -5,7 +5,7 @@ const moment = require('moment')
 module.exports = async (req, res) => {
   let key = parseInt(req.params.id)
   if (isNaN(key)) return res.json({})
-  let pool = { close: () => {} }
+  let pool = { close: () => { } }
   let dCheckIn = moment(req.params.id, 'YYYYMMDDHHmmssSSS')
   if (!moment.isMoment(dCheckIn)) return res.json({})
   try {
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     ORDER BY s.nOrder ASC, nVersion DESC
     `
     pool = await mssql()
-    let [ records ] = (await pool.request().query(sql)).recordsets
+    let [records] = (await pool.request().query(sql)).recordsets
     let editor = []
     records = records.map(e => {
       if (editor.indexOf(e['sName']) === -1) editor.push(e['sName'])

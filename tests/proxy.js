@@ -3,7 +3,7 @@ const request = require('request-promise')
 // var http = require('http')
 
 function buildAuthHeader(user, pass) {
-    return 'Basic ' + Buffer.from(user + ':' + pass).toString('base64')
+  return 'Basic ' + Buffer.from(user + ':' + pass).toString('base64')
 }
 
 // proxy = 'proxy99.central.co.th'

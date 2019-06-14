@@ -12,6 +12,7 @@ router.post('/history/del/:id', require('./history/delete'))
 router.get('/history/version/:id', require('./history/version'))
 
 router.post('/history/submit', require('./history/submit'))
+router.post('/history/new', require('./history/new'))
 
 router.get('/monitor/check-hour/:hour', require('./monitor/check-hour'))
 router.get('/monitor/inbound-transfer', require('./monitor/inbound-transfer'))

@@ -4,7 +4,7 @@ module.exports = {
     password: '44662288',
     server: 'RISHSLTSD3NB1FP',
     database: 'SURVEY_CMG',
-    options: { }
+    options: {}
   },
   'dev2': {
     user: 'posappadm',

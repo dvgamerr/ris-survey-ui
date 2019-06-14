@@ -12,7 +12,7 @@
     "prepare": "link-module-alias",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "npm run lint"
-  }, 
+  },
   "_moduleAliases": {
     "@debuger": "/server/debuger.js",
     "@mssql": "/server/mssql.js",

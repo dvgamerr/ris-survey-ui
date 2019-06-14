@@ -11,7 +11,7 @@ const router = Router()
 router.use(bodyParser.json())
 
 router.use((req, res, next) => {
-  const methodAllow = [ 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT' ]
+  const methodAllow = ['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Headers', '*')
@@ -62,7 +62,7 @@ router.get('/user', (req, res) => (async () => {
 const encodeToken = data => {
   const hashId = md5(data.mail + (+(new Date())))
   return jsonwebtoken.sign({ hash: hashId, ...data }, process.env.JWT_KEYHASH)
-} 
+}
 
 const decodeToken = data => {
   return jsonwebtoken.verify(data, process.env.JWT_KEYHASH)
@@ -91,11 +91,11 @@ router.post('/recheck', (req, res) => (async () => {
 
 router.post('/login', (req, res) => (async () => {
   let date = new Date()
-  
+
   let auth = {}
   let { user, pass } = req.body
   let raw = req.headers['authorization']
-  
+
   logger.log('LDAP: auth:', !!raw)
   logger.log('LDAP: user:', user)
   if (raw && !user) {
@@ -106,18 +106,18 @@ router.post('/login', (req, res) => (async () => {
         auth = /(?<usr>.*?):(?<pwd>.*)/ig.exec(auth).groups || {}
         IsEncode = true
       }
-    } finally { /* decode but user random charector and send to server. */}
+    } finally { /* decode but user random charector and send to server. */ }
 
     if (!IsEncode) {
       logger.log(`Login -- Unauthorized (401)`)
-      return res.status(401).json({ error: 'Unauthorized (401)'})
+      return res.status(401).json({ error: 'Unauthorized (401)' })
     }
   } else {
     auth = { usr: user, pwd: pass }
   }
   if (!auth.usr) {
     logger.log(`Login -- Unauthorized (404)`)
-    return res.status(401).json({ error: 'Unauthorized (404)'})
+    return res.status(401).json({ error: 'Unauthorized (404)' })
   }
 
   let { User, UserHistory } = await db.open()
@@ -126,7 +126,7 @@ router.post('/login', (req, res) => (async () => {
     auth.usr = auth.usr.trim().toLowerCase()
 
     let fullMail = !/@/g.test(auth.usr.toLowerCase()) ? `${auth.usr.toLowerCase()}@central.co.th` : auth.usr.toLowerCase()
-    let user = await User.findOne({ $or: [ { mail: fullMail }, { user_name: auth.usr.toLowerCase() } ] })
+    let user = await User.findOne({ $or: [{ mail: fullMail }, { user_name: auth.usr.toLowerCase() }] })
     let data = null
     try {
       // logger.log('LDAP:', auth)
@@ -139,7 +139,7 @@ router.post('/login', (req, res) => (async () => {
     } catch (ex) {
       // logger.log('LDAP:', ex.message)
       data = { error: ex.message || ex }
-      user = await User.findOne({ $or: [ { mail: fullMail }, { user_name: auth.usr.toLowerCase() } ], pwd: md5(auth.pwd) })
+      user = await User.findOne({ $or: [{ mail: fullMail }, { user_name: auth.usr.toLowerCase() }], pwd: md5(auth.pwd) })
     }
     if (!user && data.error) throw new Error(data.error)
     if (!data || !data.user_name) throw new Error('LDAP auth unsuccessful.')
@@ -159,7 +159,7 @@ router.post('/login', (req, res) => (async () => {
         $set: { pwd: md5(auth.pwd), token: null, lasted: date }
       })
     }
- 
+
     let accessToken = encodeToken({ _id: user._id })
     await User.updateOne({ _id: user._id }, { $set: { token: accessToken } })
     // if (user.activate && user.enabled) {

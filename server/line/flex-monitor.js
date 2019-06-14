@@ -36,13 +36,13 @@ module.exports = (name, tasks, updated = false) => {
     ]
     if (e.problem) {
       contents.push({
-          type: 'box',
-          layout: 'baseline',
-          contents: [
-            { type: 'text', text: ' ', flex: 1 },
-            { type: 'text', text: e.reason, wrap: true, color: '#999999', weight: 'bold', size: 'xxs', flex: 24 }
-          ]
-        })
+        type: 'box',
+        layout: 'baseline',
+        contents: [
+          { type: 'text', text: ' ', flex: 1 },
+          { type: 'text', text: e.reason, wrap: true, color: '#999999', weight: 'bold', size: 'xxs', flex: 24 }
+        ]
+      })
     }
     return contents
   })
@@ -53,7 +53,7 @@ module.exports = (name, tasks, updated = false) => {
       type: 'box',
       layout: 'vertical',
       contents: [
-        { 
+        {
           type: 'box',
           layout: 'horizontal',
           contents: [

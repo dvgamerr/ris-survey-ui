@@ -1,9 +1,9 @@
 const ldapAuth = require('../server/authication/ldap')
 
 // .then(data => {
-  // console.log(data)
+// console.log(data)
 // }).catch(ex => {
-  // console.log(ex)
+// console.log(ex)
 // })
 let res = {}
 const pwd = 'asdasd3'
