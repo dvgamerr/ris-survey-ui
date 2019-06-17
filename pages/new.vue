@@ -9,7 +9,7 @@
                 <h3>Title :</h3>
               </b-col>
               <b-col sm="31">
-                <b-form-input v-model="titleName" placeholder="Enter your Title" />
+                <b-form-input v-model="titleName" placeholder="Enter your Title" required />
               </b-col>
               <b-button
                 type="button"
@@ -36,6 +36,7 @@
                         type="text"
                         class="sublist-form"
                         placeholder="Enter your List"
+                        required
                       />
                     </b-col>
                   </b-row>
@@ -102,15 +103,10 @@ export default {
         })
         .then(({ data }) => {
           if (data.success) {
-            if (!this.taskKey) {
-              vm.$toast.success("Thanks.");
-              vm.onReset();
-            } else {
-              vm.$toast.success("Task Updated.");
+              vm.$toast.success("List Updated.");
               vm.$router.push("/");
-            }
           } else {
-            vm.$toast.error("Error API");
+            vm.$toast.error("Error API // This Title is use already!");
           }
           this.submited = false;
         })

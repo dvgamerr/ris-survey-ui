@@ -302,6 +302,7 @@ export default {
             if (!this.taskKey) {
               vm.$toast.success("Thanks.");
               vm.onReset();
+              vm.$router.push("/history");
             } else {
               vm.$toast.success("Task Updated.");
               vm.$router.push("/history");

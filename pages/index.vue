@@ -5,9 +5,19 @@
         <div class="col-md-25">
           <h3>All List :</h3>
           <div v-for="(e, i) in tasks" :key="e.nTaskId" class="category-list">
-            <a href="list/" @click.prevent="onView(e.nTaskId)">
-              <h4>{{ (i + 1) }}. {{ e.sTitleName }}</h4>
-            </a>
+            <div class="row">
+              <div class="col">
+                <h4>
+                  <a
+                    href="list/"
+                    @click.prevent="onView(e.nTaskId)"
+                  >{{ (i + 1) }}. {{ e.sTitleName }}</a>
+                </h4>
+              </div>
+              <div class="col">
+                <small>created: {{ toTime(e.dCreated) }}</small>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-md-11">
@@ -22,6 +32,8 @@
   </div>
 </template>
 <script>
+import moment from "moment";
+import "moment/locale/th";
 export default {
   data: () => ({
     taskKey: null,
@@ -35,6 +47,10 @@ export default {
   methods: {
     onView(e) {
       this.$router.push({ name: "task-no", params: { no: e } });
+    },
+    toTime(datetime) {
+      return moment.utc(datetime).format("DD/MM/YYYY HH:mm");
+      // return moment(datetime).fromNow();
     }
   }
 };

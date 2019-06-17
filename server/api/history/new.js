@@ -10,6 +10,16 @@ module.exports = async (req, res) => {
     let updated = []
     pool = await mssql()
 
+    let checkTitle = `SELECT [sTitleName] from UserTask`
+    let [recordTitle] = (await pool.request().query(checkTitle)).recordsets
+    let j = -1
+    for (const a of recordTitle) {
+      j += 1
+      console.log(recordTitle[j].sTitleName)
+      if (recordTitle[j].sTitleName == titleName) return
+      updated.push(a)
+    }
+
     let checkRow = `SELECT max(nTaskID) n from UserTask`
     let [[record]] = (await pool.request().query(checkRow)).recordsets
     nTaskId = record.n + 1
