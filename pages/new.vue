@@ -9,7 +9,14 @@
                 <h3>Title :</h3>
               </b-col>
               <b-col sm="31">
-                <b-form-input v-model="titleName" placeholder="Enter your Title" required />
+                <b-form-input
+                  v-model="titleName"
+                  placeholder="Enter your Title"
+                  maxlength="50"
+                  required
+                  tabindex="2"
+                  autofocus
+                />
               </b-col>
               <b-button
                 type="button"
@@ -24,20 +31,25 @@
           <div class="row mb-5 pb-5">
             <div v-for="(e, i) in tasks" :key="i" class="col-sm-36">
               <b-container fluid>
-                <span class="float-right" style="cursor:pointer" @click="delNewlist">X</span>
                 <div class="list-form">
-                  <b-row>
-                    <b-col sm="3">
+                  <b-row class="justify-content-md-center">
+                    <b-col sm="1">
                       <label class="card-title">{{ (i+1) }}.</label>
                     </b-col>
-                    <b-col sm="30">
+                    <b-col sm="15">
                       <b-form-input
                         v-model="e.sSubject"
                         type="text"
                         class="sublist-form"
+                        size="sm"
                         placeholder="Enter your List"
+                        maxlength="50"
+                        tabindex="2"
                         required
                       />
+                    </b-col>
+                    <b-col sm="1">
+                      <b-button v-if="i>0" size="sm" variant="danger" @click="delNewlist">X</b-button>
                     </b-col>
                   </b-row>
                 </div>
@@ -46,7 +58,7 @@
             <div class="survey-submit">
               <div class="container">
                 <div class="row">
-                  <div class="col-md-18" />
+                  <div class="col-md-18"/>
                   <div class="col-md-18 text-right">
                     <b-button
                       type="submit"
@@ -103,8 +115,8 @@ export default {
         })
         .then(({ data }) => {
           if (data.success) {
-              vm.$toast.success("List Updated.");
-              vm.$router.push("/");
+            vm.$toast.success("List Updated.");
+            vm.$router.push("/");
           } else {
             vm.$toast.error("Error API // This Title is use already!");
           }

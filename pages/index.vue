@@ -3,7 +3,7 @@
     <no-ssr>
       <b-row>
         <div class="col-md-25">
-          <h3>All List :</h3>
+          <h2>All List :</h2>
           <div v-for="(e, i) in tasks" :key="e.nTaskId" class="category-list">
             <div class="row">
               <div class="col">
@@ -33,7 +33,6 @@
 </template>
 <script>
 import moment from "moment";
-import "moment/locale/th";
 export default {
   data: () => ({
     taskKey: null,
@@ -50,7 +49,7 @@ export default {
     },
     toTime(datetime) {
       return moment.utc(datetime).format("DD/MM/YYYY HH:mm");
-      // return moment(datetime).fromNow();
+      //return moment(datetime).fromNow();
     }
   }
 };

@@ -53,10 +53,10 @@
                       v-text="!e.problem ? 'Problem' : 'Cancel'"
                     />
                     <b class="checker-text">
-                      <span v-text="(i + 1) + '. ' + e.sSubject" />
+                      <span v-text="(i + 1) + '. ' + e.sSubject"/>
                     </b>
                     <!--Label-->
-                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail" />
+                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail"/>
                     <div v-if="e.problem">
                       <!--problem-->
                       <div>
@@ -94,12 +94,12 @@
                         :required="e.problem"
                         size="sm"
                         maxlength="500"
-                        placeholder="Enter at least 5 characters"
+                        placeholder="Enter your problem at least 5 characters"
                         rows="2"
                         @change="onChange"
                       />
                     </div>
-                    <div v-else />
+                    <div v-else/>
                   </b-form-checkbox>
                 </b-form-group>
               </div>
@@ -135,18 +135,14 @@
                       type="reset"
                       :disabled="submited"
                       variant="danger"
-                    >
-                      Reset
-                    </b-button>
+                    >Reset</b-button>
                     <nuxt-link
                       v-else
                       tag="button"
                       to="/history"
                       type="button"
                       class="btn btn-secondary"
-                    >
-                      Back
-                    </nuxt-link>
+                    >Back</nuxt-link>
                   </div>
                 </div>
               </div>

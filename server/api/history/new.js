@@ -15,7 +15,6 @@ module.exports = async (req, res) => {
     let j = -1
     for (const a of recordTitle) {
       j += 1
-      console.log(recordTitle[j].sTitleName)
       if (recordTitle[j].sTitleName == titleName) return
       updated.push(a)
     }
@@ -27,7 +26,7 @@ module.exports = async (req, res) => {
     let command1 = `INSERT INTO [dbo].[UserTask]
              ([nTaskId],[sTitleName],[nLevelPermission],[bEnabled],[dCreated])
           VALUES
-             ('${nTaskId}','${titleName}',0,1,CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}'))
+             ('${nTaskId}','${titleName}',0,1,CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121))
           `
     await pool.request().query(command1)
     let checkTaskDetail = `SELECT max(nTaskDetailID) n from UserTaskDetail`
@@ -39,7 +38,7 @@ module.exports = async (req, res) => {
       checkTaskDetail += 1
 
       let command2 = `INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId],[nTaskId],[sSubject],[nOrder],[bEnabled],[dCreated])
-      VALUES ('${checkTaskDetail}','${nTaskId}','${e.sSubject}','${i}','True', CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}'))
+      VALUES ('${checkTaskDetail}','${nTaskId}','${e.sSubject}','${i}','True', CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121))
     `
       await pool.request().query(command2)
       updated.push(e)
