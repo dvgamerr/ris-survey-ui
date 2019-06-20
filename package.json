@@ -41,7 +41,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "mongoose": "^5.6.0",
-    "mssql": "^4.3.7",
+    "mssql": "^5.1.0",
     "numeral": "^2.0.6",
     "nuxt": "^2.8.1",
     "nuxt-fontawesome": "^0.4.0",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^10.0.2",
     "eslint": "^5.16.0",
     "eslint-config-standard": ">=12.0.0",
     "eslint-loader": "^2.0.0",
