@@ -38,6 +38,8 @@ const NuxtBuilder = async () => {
   if (!config.dev) {
     await nuxt.ready()
     app.use(nuxt.render)
+    
+    await require('./api/approve/check-list')()
   }
   // Listen the server
   await app.listen(port, host)
