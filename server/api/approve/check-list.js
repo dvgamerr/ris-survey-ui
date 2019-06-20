@@ -15,7 +15,7 @@ const main = async () => {
     if (i) clearTimeout(i)
     i = setTimeout(() => main(), time)
   }
-  let loopTime = 2000
+  let loopTime = 200
   let pool = { close: () => {} }
   try {
     let data = null
@@ -86,7 +86,7 @@ const main = async () => {
           }
         }
       }
-      loopTime = 1000
+      loopTime = 100
     }
   } catch (ex) {
     logger.error(ex)
