@@ -2,17 +2,33 @@ const logger = require('@debuger')('SERVER')
 const mssql = require('@mssql')
 
 module.exports = async (req, res) => {
-  let { id } = req.params
+  let page = parseInt(req.query.p || 1)
+  if (isNaN(page)) return res.json([])
   let pool = { close: () => {} }
   try {
-    pool = await mssql()
-    let sql = `select sTitleName, sMenu FROM UserTask WHERE nIndex = ${id}`
-    let [ task ] = (await pool.request().query(sql)).recordset
     
-    sql = `SELECT nTaskId, sTitleName, nIndex = ${id}
-      , dCreated FROM UserTask ORDER BY nTaskId ASC`
+    let sql = `SELECT * FROM (
+      SELECT ROW_NUMBER() OVER (ORDER BY nType ASC, nTaskID DESC , sTitleName, bEnabled, dCreated) AS nRow,
+      nType, nTaskId, sTitleName, bEnabled, dCreated FROM (
+      SELECT 1 nType, s.nTaskId, s.sTitleName, s.bEnabled, s.dCreated FROM UserTask s
+      INNER JOIN UserTaskDetail d ON d.nTaskId = s.nTaskId
+      LEFT JOIN UserTaskSubmit t ON t.nTaskDetailId = d.nTaskDetailId
+      WHERE s.bEnabled = 1 and d.bEnabled = 1  and t.nTaskDetailId IS NULL
+      GROUP BY s.nTaskId, s.sTitleName, s.bEnabled, s.dCreated
+      -- ORDER BY s.dCreated DESC
+      UNION ALL
+      SELECT 2 nType, s.nTaskId, s.sTitleName, s.bEnabled, s.dCreated FROM UserTask s
+      INNER JOIN UserTaskDetail d ON d.nTaskId = s.nTaskId
+      INNER JOIN UserTaskSubmit t ON t.nTaskDetailId = d.nTaskDetailId
+      WHERE s.bEnabled = 1 and d.bEnabled = 1
+      GROUP BY s.nTaskId, s.sTitleName, s.bEnabled, s.dCreated 
+      --ORDER BY Max(t.dCreated) DESC
+      ) a
+      -- ORDER BY nType ASC, nTaskID DESC , sTitleName, bEnabled, dCreated
+      ) AS r WHERE nRow >= ${page} * 100 - 99 AND nRow <= ${page} * 100`
+    pool = await mssql()
     let [ records ] = (await pool.request().query(sql)).recordsets
-    res.json({ tasks: records })
+    res.json(records)
   } catch (ex) {
     logger.error(ex)
   } finally {

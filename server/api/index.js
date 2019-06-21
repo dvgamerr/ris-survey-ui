@@ -2,10 +2,11 @@
 const { Router } = require('express')
 const router = Router()
 
-require('./approve/check-list')()
+// require('./approve/check-list')()
 
-router.get('/history/detail/:id', require('./history/detail'))
-router.get('/history/home/:id', require('./history/home'))
+router.get('/history/new/:id', require('./history/editlist'))
+router.get('/history/list/:id', require('./history/list'))
+router.get('/history/home/', require('./history/home'))
 router.get('/history', require('./history'))
 router.get('/history/:id', require('./history/id'))
 router.post('/history/del/:id', require('./history/delete'))
