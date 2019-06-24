@@ -53,10 +53,10 @@
                       v-text="!e.problem ? 'Problem' : 'Cancel'"
                     />
                     <b class="checker-text">
-                      <span v-text="(i + 1) + '. ' + e.sSubject" />
+                      <span v-text="(i + 1) + '. ' + e.sSubject"/>
                     </b>
                     <!--Label-->
-                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail" />
+                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail"/>
                     <div v-if="e.problem">
                       <!--problem-->
                       <div>
@@ -99,7 +99,7 @@
                         @change="onChange"
                       />
                     </div>
-                    <div v-else />
+                    <div v-else/>
                   </b-form-checkbox>
                 </b-form-group>
               </div>
@@ -135,8 +135,7 @@
                       type="reset"
                       :disabled="submited"
                       variant="danger"
-                    >
-                      Reset
+                    >Reset
                     </b-button>
                     <nuxt-link
                       v-else
@@ -144,8 +143,7 @@
                       to="/history"
                       type="button"
                       class="btn btn-secondary"
-                    >
-                      Back
+                    >Back
                     </nuxt-link>
                   </div>
                 </div>
@@ -159,7 +157,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment from "moment"
 export default {
   data: () => ({
     taskKey: null,
@@ -174,39 +172,37 @@ export default {
     getTaskDateTime() {
       return moment(this.taskKey, "YYYYMMDDHHmmssSSS").format(
         "DD MMMM YYYY HH:mm:ss"
-      );
+      )
     },
     getDateTime() {
-      return this.current.format("DD MMMM YYYY HH:mm:ss");
+      return this.current.format("DD MMMM YYYY HH:mm:ss")
     },
     getTaskUncheck() {
-      return this.tasks.length - this.getTaskSuccess - this.getTaskProblem;
+      return this.tasks.length - this.getTaskSuccess - this.getTaskProblem
     },
     getTaskSuccess() {
-      return this.tasks.filter(e => e.selected).length;
+      return this.tasks.filter(e => e.selected).length
     },
     getTaskProblem() {
-      return this.problem;
+      return this.problem
     }
   },
   async asyncData({ redirect, params, $axios }) {
-    console.log(params)
     if (params.id) {
-      let sKey = parseInt(params.id);
+      let sKey = parseInt(params.id)
 
-      if (sKey == NaN) return redirect("/history");
-      let { data } = await $axios("/api/history/" + params.id);
-      console.log(data)
-      if (!data.records) return redirect("/history");
-      return { editor: data.editor, tasks: data.records, taskKey: params.id };
+      if (sKey == NaN) return redirect("/history")
+      let { data } = await $axios("/api/history/" + params.id)
+
+      if (!data.records) return redirect("/history")
+      return { editor: data.editor, tasks: data.records, taskKey: params.id }
     }
     if (params.no) {
-      let sKey = parseInt(params.no);
-      if (sKey == NaN) return redirect("/history");
+      let sKey = parseInt(params.no)
+      if (sKey == NaN) return redirect("/history")
       else {
-        let { data } = await $axios("/api/history/list/" + params.no);
-        console.log(data.title)
-        return { title: data.title, tasks: data.tasks, taskKey: null };
+        let { data } = await $axios("/api/history/list/" + params.no)
+        return { title: data.title, tasks: data.tasks, taskKey: null }
       }
     }
   },
@@ -214,24 +210,24 @@ export default {
     if (!this.taskKey) {
       setInterval(
         (() => {
-          this.current = moment();
+          this.current = moment()
         }).bind(this),
         500
-      );
+      )
       if (process.client) {
-        let survey = window.localStorage.getItem("survey.tasks");
+        let survey = window.localStorage.getItem("survey.tasks")
         if (survey) {
-          survey = JSON.parse(survey);
+          survey = JSON.parse(survey)
           if (
             this.tasks.length === survey.length &&
             survey.filter(s => s.reason !== "" || s.selected).length > 0
           )
-            this.tasks = survey;
-          this.problem = 0;
+            this.tasks = survey
+          this.problem = 0
           for (const i of this.tasks) {
-            this.problem += i.problem ? 1 : 0;
+            this.problem += i.problem ? 1 : 0
           }
-          this.$forceUpdate();
+          this.$forceUpdate()
         }
       }
     }
@@ -244,42 +240,42 @@ export default {
             window.localStorage.setItem(
               "survey.tasks",
               JSON.stringify(this.tasks)
-            );
+            )
           }).bind(this)
-        );
+        )
       }
     },
     onCheckAll() {
       let checkAll =
-        this.tasks.length === this.tasks.filter(e => e.selected).length;
-      if (checkAll) return this.onReset();
+        this.tasks.length === this.tasks.filter(e => e.selected).length
+      if (checkAll) return this.onReset()
 
       for (const e of this.tasks) {
-        e.selected = true;
-        e.problem = false;
-        e.reason = "";
-        e.status = "";
+        e.selected = true
+        e.problem = false
+        e.reason = ""
+        e.status = ""
       }
-      this.problem = 0;
-      this.$forceUpdate();
-      this.onSave();
+      this.problem = 0
+      this.$forceUpdate()
+      this.onSave()
     },
     onReset() {
       if (!this.taskKey) {
-        this.problem = 0;
+        this.problem = 0
         for (const e of this.tasks) {
-          e.selected = false;
-          e.problem = false;
-          e.reason = "";
-          e.status = "";
+          e.selected = false
+          e.problem = false
+          e.reason = ""
+          e.status = ""
         }
-        this.$forceUpdate();
+        this.$forceUpdate()
         if (process.client && this.tasks)
-          window.localStorage.removeItem("survey.tasks");
+          window.localStorage.removeItem("survey.tasks")
       }
     },
     onSubmit() {
-      let vm = this;
+      let vm = this
       let data = vm.tasks.map(e => {
         return {
           nTaskDetailId: e.nTaskDetailId,
@@ -289,9 +285,9 @@ export default {
           status: e.problem ? e.status : "",
           problem: e.problem || false,
           reason: e.problem ? e.reason : ""
-        };
-      });
-      this.submited = true;
+        }
+      })
+      this.submited = true
       vm.$axios
         .post("/api/history/submit", {
           key: vm.taskKey,
@@ -302,50 +298,50 @@ export default {
         .then(({ data }) => {
           if (data.success) {
             if (!this.taskKey) {
-              vm.$toast.success("Thanks.");
-              vm.onReset();
-              vm.$router.push("/history");
+              vm.$toast.success("Thanks.")
+              vm.onReset()
+              vm.$router.push("/history")
             } else {
-              vm.$toast.success("Task Updated.");
-              vm.$router.push("/history");
+              vm.$toast.success("Task Updated.")
+              vm.$router.push("/history")
             }
           } else {
-            vm.$toast.error("Error API");
+            vm.$toast.error("Error API")
           }
-          this.submited = false;
+          this.submited = false
         })
         .catch(ex => {
-          vm.$toast.error(ex.message);
-          this.submited = false;
-        });
+          vm.$toast.error(ex.message)
+          this.submited = false
+        })
     },
     onReason(e) {
-      e.selected = false;
-      e.problem = !e.problem;
-      if (!e.status) e.status = e.problem ? "FAIL" : "";
-      if (!e.problem) e.status = "";
-      this.$forceUpdate();
+      e.selected = false
+      e.problem = !e.problem
+      if (!e.status) e.status = e.problem ? "FAIL" : ""
+      if (!e.problem) e.status = ""
+      this.$forceUpdate()
 
-      this.problem = 0;
+      this.problem = 0
       for (const i of this.tasks) {
-        this.problem += i.problem ? 1 : 0;
+        this.problem += i.problem ? 1 : 0
       }
-      if (this.taskKey) return;
-      this.onSave();
+      if (this.taskKey) return
+      this.onSave()
     },
     onChange() {
-      this.$forceUpdate();
-      if (this.taskKey) return;
-      this.onSave();
+      this.$forceUpdate()
+      if (this.taskKey) return
+      this.onSave()
     },
     onStatus(e, text) {
-      e.status = text;
-      this.$forceUpdate();
-      if (this.taskKey) return;
-      this.onSave();
+      e.status = text
+      this.$forceUpdate()
+      if (this.taskKey) return
+      this.onSave()
     }
   }
-};
+}
 </script>
 
 <style>

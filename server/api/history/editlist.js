@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
   try {
     
     pool = await mssql()
-    let command1 = `SELECT [sTitleName], [sMenu] FROM [dbo].[UserTask] WHERE nTaskId = '${id}'
+    let command1 = `SELECT [sTitleName], [sMenu], CONVERT(VARCHAR,dCreated,120)dCreated FROM [dbo].[UserTask] WHERE nTaskId = '${id}'
           `
     let [tittleName] = (await pool.request().query(command1)).recordset
 
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     WHERE d.bEnabled = 1 AND t.nTaskId = ${id} ORDER BY nOrder ASC`
     let [records] = (await pool.request().query(command2)).recordsets
 
-    res.json({ titleName: tittleName['sTitleName'], tasks: records}) 
+    res.json({ titleName: tittleName['sTitleName'],dCreated: tittleName['dCreated'], tasks: records}) 
   } catch (ex) {
     logger.error(ex)
   } finally {

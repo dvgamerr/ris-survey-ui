@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-36">
         <h3>History</h3>
-        <small>History group by date and lastet 100 rows.</small>
+        <small>History group by date and lastest 100 rows.</small>
         <hr>
       </div>
     </div>
@@ -12,14 +12,14 @@
         <div v-for="(day, i) in getGroupHistory()" :key="day" class="group-history">
           <h6 v-text="parseDays(day)" />
           <div v-for="e in filterHistory(day)" :key="e.nRow" class="text-inline">
-            <button
+            <!-- <button
               v-if="$auth.user.user_level >= 4"
               type="button"
               class="btn btn-sm btn-icon"
               @click.prevent="onDelete(e.sKey)"
             >
               <fa icon="trash-alt" />
-            </button>
+            </button> -->
             <button type="button" class="btn btn-sm btn-icon" @click.prevent="onEdit(e.sKey)">
               <fa icon="edit" />
             </button>

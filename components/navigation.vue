@@ -1,7 +1,8 @@
 <template>
-  <b-navbar v-if="$route.name !== 'sign-in'" type="dark" variant="dark">
+  <b-navbar type="dark" variant="dark">
+    <!-- v-if="$route.name !== 'sign-in'" -->
     <b-navbar-brand to="/">
-      <b>[ POS ]</b> SERVER SURVEY
+      [POS] SERVER SURVEY
     </b-navbar-brand>
     <b-navbar-nav class="ml-auto">
       <b-nav-item exact to="/">Home</b-nav-item>
@@ -14,11 +15,12 @@
 </template>
 <script>
 export default {
-  created() {},
+  created () {
+  },
   methods: {
-    onSignOut() {
-      this.$auth.logout();
+    onSignOut () {
+      this.$auth.logout()
     }
   }
-};
+}
 </script>
