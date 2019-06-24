@@ -6,7 +6,7 @@
           <div class="col-sm-36">
             <b-row>
               <b-col sm="4">
-                <h3>Title :</h3>
+                <h3>Title:</h3>
               </b-col>
               <b-col sm="31">
                 <b-form-input
@@ -14,10 +14,9 @@
                   placeholder="Enter your Title"
                   maxlength="50"
                   required
-                  tabindex="2"
+                  tabindex="1"
                   autofocus
-                  @change="onChange"
-                />
+                /><span class="required">*required</span>
               </b-col>
               </b-row>
               <b-row>
@@ -40,30 +39,30 @@
                     <b-col sm="1">
                       <label class="card-title" v-text="`${(i+1)}.`"/>
                     </b-col>
-                    <b-col sm="15">
+                    <b-col sm="20">
+                      <span class="required">*required list</span>
                       <b-form-input
                         v-model="e.sSubject"
                         type="text"
                         class="sublist-form"
                         size="sm"
                         placeholder="Enter your List"
-                        maxlength="41"
+                        maxlength="50"
                         tabindex="2+`${(i+1)}.`"
-                        @change="onChange"
                         required
                       />
                       <b-form-textarea
                         v-model="e.sDescription"
                         class="sublist-form"
                         size="sm"
-                        placeholder="Enter your Description (NOT REQUIRED)"
-                        maxlength="200"
+                        placeholder="Enter your Description"
+                        maxlength="500"
                         tabindex="2+`${(i+1)}.`"
                         rows="2"
-                        @change="onChange"
                       />
                     </b-col>
                     <b-col sm="1">
+                      <br>
                       <b-button v-if="i>0" size="sm" variant="danger" @click="delNewlist(i)">
                         <fa icon="times" />
                       </b-button>
@@ -135,6 +134,7 @@ export default {
       return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated }
     }
   },
+
   //   created() { //แก้ให้SAVE inputbox
   //   if (!this.taskKey) {
   //     setInterval(
@@ -157,7 +157,7 @@ export default {
   //     }
   //   }
   // },
-
+  
   methods: {
     getThisDateTime(datetime) {
       return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
@@ -170,9 +170,9 @@ export default {
           e.sSubject = ""
           e.sDescription = ""
         }
-        this.$forceUpdate()
-        if (process.client && this.tasks)
-          window.localStorage.removeItem("survey.tasks")
+        // this.$forceUpdate()
+        // if (process.client && this.tasks)
+        //   window.localStorage.removeItem("survey.tasks")
       }
     },
     onSubmit() {
@@ -223,11 +223,12 @@ export default {
     delNewlist(i) {
       this.tasks.splice(i, 1)
     },
-//     onChange() {
-//       this.$forceUpdate()
-//       if (this.taskKey) return
-//       this.onSave()
-//     },
+
+// onChange(){
+// this.$forceUpdate()
+// if (this.taskKey) return
+// this.onSave()
+// },
 //     onSave() {
 //       if (!this.taskKey && process.client && this.tasks) {
 //         this.$nextTick(
@@ -260,5 +261,9 @@ button[type="submit"] {
   min-height: 80px;
   background-color: #f8f9fa;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+span.required{
+  color: red;
+  font-size: 11px;
 }
 </style>
