@@ -176,6 +176,17 @@ export default {
       }
     },
     onSubmit() {
+      let array = []
+      let set = new Set()
+      this.tasks.forEach(element => {
+        array.push(element.sSubject)
+        set.add(element.sSubject)
+      });
+
+      if (set.size!==array.length) {
+        alert("Not ok!!")
+      }
+      else {
       let taskKey = this.taskKey 
       let vm = this
       let data = vm.tasks
@@ -215,7 +226,7 @@ export default {
         vm.$toast.error(ex.message)
         this.submited = false
       })
-      }
+      }}
     },
     addNewlist() {
       this.tasks.push({})
@@ -223,7 +234,6 @@ export default {
     delNewlist(i) {
       this.tasks.splice(i, 1)
     },
-
 // onChange(){
 // this.$forceUpdate()
 // if (this.taskKey) return

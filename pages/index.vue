@@ -12,7 +12,7 @@
                 <button
                   type="button"
                   class="btn btn-sm btn-icon"
-                  @click.prevent="onDelete(e.nTaskId)"
+                  @click.prevent="onDelete(e.nTaskId,i)"
                 >
                   <fa icon="trash-alt"/>
                 </button>
@@ -31,7 +31,7 @@
               </div>
               <div class="text-right">
                 <small
-                  v-text="`${(e.nType) == '1' ? ' last created : ' : 'recent use : '} ${toTime(e.dCreated)}`"
+                  v-text="`${(e.nType) == '1' ? ' last created : ' : 'recent use : '} ${toTime(e.sCreated)}`"
                 />
               </div>
             </div>
@@ -71,9 +71,26 @@ export default {
       this.editor = true
       this.$router.push({ name: "edit-id", params: { id: e } })
     },
-    onDelete(e) {
+    onDelete(e,i) {
       if (confirm("Are you sure to Delete ?")) {
-        this.$router.push({ name: "del-id", params: { id: e } })
+        let vm = this
+        let data = vm.tasks
+        let index = -1;
+        let item = this.tasks.filter((a, j) => {
+        if (a.nTaskId=== e) index = j
+        return a.nTaskId=== e
+      })
+      this.tasks.splice(i, 1)
+      vm.$axios
+        .post("/api/history/home/" + e)
+        .then(({ data }) => {
+          if (data.success) {
+            vm.$toast.error("Delete it!")
+          }
+        })
+        .catch(ex => {
+          vm.$toast.error(ex.message)
+        })
       } else {
         this.$router.push("/")
       }

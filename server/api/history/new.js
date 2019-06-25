@@ -14,7 +14,6 @@ module.exports = async (req, res) => {
       if (titleName.trim() == "") throw new Error("Don't use space !")
       titleName = titleName.replace(/\s+/g," ")
       titleName = titleName.replace(/'/g, "\'\'")
-      titleName = titleName.replace(/'+/g, "\'\'")
       let checkTitle = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
       let [recordTitle] = (await pool.request().query(checkTitle)).recordsets
       if (recordTitle.length > 0) throw new Error("This Title is use already!")
@@ -43,12 +42,14 @@ module.exports = async (req, res) => {
       }
       res.json({ success: true })
     } else {
+      let checkLength = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
+      let [recordLength] = (await pool.request().query(checkLength)).recordsets
       // Update
       let check = `SELECT [sTitleName] from UserTask where [nTaskID] = ${key} `
       let [[recordCheck]] = (await pool.request().query(check)).recordsets
       titleName = titleName.replace(/\s+/g," ")
-      titleName = titleName.replace(/'/g, "\'\'")
       if (recordCheck.sTitleName == titleName.trim()) {
+        titleName = titleName.replace(/'/g, "\'\'")
         let command1 = `UPDATE [dbo].[UserTask] SET [sTitleName] = LTRIM(RTRIM('${titleName}')),
       [dCreated] = CONVERT(DATETIME,'${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121) WHERE [nTaskId] = ${key}
           `

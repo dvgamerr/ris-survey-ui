@@ -1,6 +1,5 @@
 <template>
-  <b-navbar type="dark" variant="dark">
-    <!-- v-if="$route.name !== 'sign-in'" -->
+  <b-navbar v-if="$route.name !== 'sign-in'" type="dark" variant="dark">
     <b-navbar-brand to="/">
       [POS] SERVER SURVEY
     </b-navbar-brand>
@@ -24,3 +23,8 @@ export default {
   }
 }
 </script>
+
+
+<style>
+
+</style>
