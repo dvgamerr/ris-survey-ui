@@ -12,8 +12,8 @@
         <div v-for="(day, i) in getGroupHistory()" :key="day" class="group-history">
           <h6 v-text="parseDays(day)" />
           <div v-for="e in filterHistory(day)" :key="e.nRow" class="text-inline">
-              <!-- v-if="$auth.user.user_level >= 4" -->
             <button
+              v-if="$auth.user.user_level >= 4"
               type="button"
               class="btn btn-sm btn-icon"
               @click.prevent="onDelete(e.sKey)"

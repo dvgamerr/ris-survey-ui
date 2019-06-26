@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   let pool = { close: () => { } }
   try {
     pool = await mssql()
-    let sql = `select sTitleName, sMenu FROM UserTask WHERE nTaskId = ${id}`
+    let sql = `select sTitleName, sMenu, dCreated FROM UserTask WHERE nTaskId = ${id}`
     let [task] = (await pool.request().query(sql)).recordset
 
     sql = `SELECT nTaskDetailId, sSubject, ISNULL(sDetail,'') sDetail, sDescription, sSolve, nOrder
@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
       INNER JOIN UserTask t ON t.nTaskId = d.nTaskId
       WHERE d.bEnabled = 1 AND t.nTaskId = ${id} ORDER BY nOrder ASC`
     let [records] = (await pool.request().query(sql)).recordsets
-    res.json({ title: task['sTitleName'], tasks: records })
+    res.json({ title: task['sTitleName'],dCreated: task['dCreated'], tasks: records })
   } catch (ex) {
     logger.error(ex)
   } finally {

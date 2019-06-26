@@ -52,60 +52,60 @@ export default {
     getTaskDateTime() {
       return moment(this.taskKey, "YYYYMMDDHHmmssSSS").format(
         "DD MMMM YYYY HH:mm:ss"
-      );
+      )
     }
   },
   async asyncData({ redirect, params, $axios }) {
-    let sKey = parseInt(params.id);
-    if (sKey == NaN) return redirect("/history");
+    let sKey = parseInt(params.id)
+    if (sKey == NaN) return redirect("/history")
 
-    let { data } = await $axios("/api/history/version/" + params.id);
-    if (!data.records) return redirect("/history");
+    let { data } = await $axios("/api/history/version/" + params.id)
+    if (!data.records) return redirect("/history")
 
-    return { editor: data.editor, tasks: data.records, taskKey: params.id };
+    return { editor: data.editor, tasks: data.records, taskKey: params.id }
   },
   methods: {
     getIcon(e) {
       if (e.status === "FAIL") {
-        return "times-circle";
+        return "times-circle"
       } else if (e.status === "WARN") {
-        return "exclamation-circle";
+        return "exclamation-circle"
       } else if (e.status === "INFO") {
-        return "info-circle";
+        return "info-circle"
       } else if (e.status === "PASS") {
-        return "check-circle";
+        return "check-circle"
       }
     },
     getColor(e) {
       if (e.status === "FAIL") {
-        return "danger";
+        return "danger"
       } else if (e.status === "WARN") {
-        return "warning";
+        return "warning"
       } else if (e.status === "INFO") {
-        return "info";
+        return "info"
       } else if (e.status === "PASS") {
-        return "success";
+        return "success"
       }
     },
     parseDate(date) {
-      return moment(date).format("DD MMM YYYY HH:mm:ss");
+      return moment(date).format("DD MMM YYYY HH:mm:ss")
     },
     getLastVersion() {
-      let nTask = [];
+      let nTask = []
       return this.tasks.filter(e => {
         if (nTask.indexOf(e.nTaskDetailId) === -1) {
-          nTask.push(e.nTaskDetailId);
-          return true;
+          nTask.push(e.nTaskDetailId)
+          return true
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     getDetailVersion(nTaskDetailId) {
-      return this.tasks.filter(e => e.nTaskDetailId === nTaskDetailId);
+      return this.tasks.filter(e => e.nTaskDetailId === nTaskDetailId)
     }
   }
-};
+}
 </script>
 
 <style>

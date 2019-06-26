@@ -4,7 +4,7 @@
       <b-row>
         <div class="col-sm-2 col-md-25">
           <h2>All Survey CheckLists :</h2>
-          <small class="title">sort by date modified and lastest 100 rows.</small>
+          <small>sort by date modified and lastest 100 rows.</small>
           <br><br>
           <div v-for="(e, i) in tasks" :key="e.row" class="category-list">
             <div class="row">
@@ -14,14 +14,14 @@
                   class="btn btn-sm btn-icon"
                   @click.prevent="onDelete(e.nTaskId,i)"
                 >
-                  <fa icon="trash-alt"/>
+                  <fa icon="trash-alt" />
                 </button>
                 <button
                   type="button"
                   class="btn btn-sm btn-icon"
                   @click.prevent="onEdit(e.nTaskId)"
                 >
-                  <fa icon="edit"/>
+                  <fa icon="edit" />
                 </button>
                 <a
                   href="list/"
@@ -75,7 +75,7 @@ export default {
       if (confirm("Are you sure to Delete ?")) {
         let vm = this
         let data = vm.tasks
-        let index = -1;
+        let index = -1
         let item = this.tasks.filter((a, j) => {
         if (a.nTaskId=== e) index = j
         return a.nTaskId=== e
@@ -96,7 +96,7 @@ export default {
       }
     }
   }
-};
+}
 </script>
 <style>
 button[type="button"] {
@@ -107,7 +107,9 @@ button[type="button"] {
 .btn-icon {
   font-size: 11px;
   padding: 0rem 0.1rem;
-  margin-top: -2px;
+  margin-left: -5px;
+  margin-right: -5px;
+  margin-bottom: 3px;
 }
 .col-sm-25 {
   font-size: 22px;

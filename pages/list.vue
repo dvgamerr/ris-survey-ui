@@ -16,7 +16,8 @@
           </div>
           <div v-else class="row">
             <div class="col-sm-36">
-              <h3>{{ title }}</h3>
+              <h3>{{ title }} {{ sMenu }}</h3>
+              <small v-if="!taskKey"><b>created :</b> {{ getThisDateTime(dCreated) }}<br></small>
               <!--checked All button-->
               <b-button
                 type="button"
@@ -53,10 +54,10 @@
                       v-text="!e.problem ? 'Problem' : 'Cancel'"
                     />
                     <b class="checker-text">
-                      <span v-text="(i + 1) + '. ' + e.sSubject"/>
+                      <span v-text="(i + 1) + '. ' + e.sSubject" />
                     </b>
                     <!--Label-->
-                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail"/>
+                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail" />
                     <div v-if="e.problem">
                       <!--problem-->
                       <div>
@@ -99,7 +100,7 @@
                         @change="onChange"
                       />
                     </div>
-                    <div v-else/>
+                    <div v-else />
                   </b-form-checkbox>
                 </b-form-group>
               </div>
@@ -135,7 +136,8 @@
                       type="reset"
                       :disabled="submited"
                       variant="danger"
-                    >Reset
+                    >
+                      Reset
                     </b-button>
                     <nuxt-link
                       v-else
@@ -143,7 +145,8 @@
                       to="/history"
                       type="button"
                       class="btn btn-secondary"
-                    >Back
+                    >
+                      Back
                     </nuxt-link>
                   </div>
                 </div>
@@ -166,6 +169,7 @@ export default {
     current: moment(),
     problem: 0,
     title: "",
+    dCreated: "",
     tasks: []
   }),
   computed: {
@@ -202,7 +206,7 @@ export default {
       if (sKey == NaN) return redirect("/history")
       else {
         let { data } = await $axios("/api/history/list/" + params.no)
-        return { title: data.title, tasks: data.tasks, taskKey: null }
+        return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null }
       }
     }
   },
@@ -233,6 +237,9 @@ export default {
     }
   },
   methods: {
+    getThisDateTime(datetime) {
+      return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
+    },
     onSave() {
       if (!this.taskKey && process.client && this.tasks) {
         this.$nextTick(
@@ -367,5 +374,9 @@ button[type="submit"] {
   min-height: 80px;
   background-color: #f8f9fa;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+h3{
+    margin: -1px;
+    padding: 0px;
 }
 </style>

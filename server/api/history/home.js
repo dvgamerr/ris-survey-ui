@@ -1,17 +1,11 @@
 const logger = require('@debuger')('SERVER')
 const mssql = require('@mssql')
 
-const insert = () => {
-   
-}
-
-
 module.exports = async (req, res) => {
   let page = parseInt(req.query.p || 1)
   if (isNaN(page)) return res.json([])
   let pool = { close: () => {} }
   try {
-    let a = insert()
     let sql = `SELECT * FROM (	
       SELECT ROW_NUMBER() OVER (ORDER BY nType ASC, dCreated DESC) AS nRow, 
 		nType, nTaskId, sTitleName, bEnabled, sCreated FROM 
