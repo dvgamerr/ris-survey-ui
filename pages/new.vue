@@ -16,6 +16,7 @@
                   required
                   tabindex="1"
                   autofocus
+                  @change="onChange"
                 />
               </b-col>
             </b-row>
@@ -33,74 +34,78 @@
             <hr>
           </div>
           <div class="row mb-5 pb-5">
-            <div v-for="(e, i) in tasks" :key="i" class="col-sm-36">
-              <div class="list-form">
-                <b-row class="justify-content-md-center">
-                  <b-col sm="1">
-                    <label class="card-title" v-text="`${(i+1)}.`" />
-                  </b-col>
-                  <b-col sm="15">
-                    <b-form-input
-                      v-model="e.sSubject"
-                      :state="valid"
-                      type="text"
-                      class="sublist-form"
-                      size="sm"
-                      placeholder="Enter your List"
-                      maxlength="50"
-                      tabindex="2+`${(i+1)}.`"
-                    />
-                    <b-form-textarea
-                      v-model="e.sDescription"
-                      class="sublist-form"
-                      size="sm"
-                      placeholder="Enter your Description"
-                      maxlength="500"
-                      tabindex="2+`${(i+1)}.`"
-                      rows="2"
-                    />
-                  </b-col>
-                  <b-col sm="1">
-                    <b-button v-if="i>0" size="sm" variant="danger" @click="delNewlist(i)">
-                      <fa icon="times" />
-                    </b-button>
-                  </b-col>
-                </b-row>
-                <br>
+            <draggable :list="tasks" :disabled="!enabled" class="col-sm-36" :move="checkMove" @start="dragging = true" @end="dragging = false">
+              <div v-for="(e, i) in tasks" :key="i" class="col-sm-36">
+                <div class="list-form">
+                  <b-card bg-variant="light" class="col-sm-24 offset-sm-6">
+                    <b-row class="row justify-content-sm-center">
+                      <b-col sm="1">
+                        <label class="no-title" v-text="`${(i+1)}. `" />
+                      </b-col>
+                      <b-col sm="15">
+                        <b-form-input
+                          v-model="e.sSubject"
+                          :state="e.valid"
+                          type="text"
+                          class="sublist-form"
+                          size="sm"
+                          placeholder="Enter your List"
+                          maxlength="50"
+                          tabindex="2+`${(i+1)}.`"
+                        />
+                        <b-form-textarea
+                          v-model="e.sDescription"
+                          class="sublist-form"
+                          size="sm"
+                          placeholder="Enter your Description"
+                          maxlength="500"
+                          tabindex="2+`${(i+1)}.`"
+                          rows="2"
+                        />
+                      </b-col>
+                      <b-col sm="1">
+                        <b-button v-if="tasks.length > 1" size="sm" variant="danger" @click="delNewlist(i)">
+                          <fa icon="times" />
+                        </b-button>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                  <br>
+                </div>
               </div>
-            </div>
-            <div class="survey-submit">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-18" />
-                  <div class="col-md-18 text-right">
-                    <b-button
-                      type="submit"
-                      :disabled="submited"
-                      variant="primary"
-                      tabindex="3"
-                      v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
-                    />
-                    <b-button
-                      v-if="!taskKey"
-                      type="reset"
-                      :disabled="submited"
-                      variant="danger"
-                      tabindex="4"
-                    >
-                      Reset
-                    </b-button>
-                    <nuxt-link
-                      v-else
-                      tag="button"
-                      to="/"
-                      type="button"
-                      class="btn btn-secondary"
-                      tabindex="4"
-                    >
-                      Back
-                    </nuxt-link>
-                  </div>
+            </draggable>
+          </div>
+          <div class="survey-submit">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-18" />
+                <div class="col-md-18 text-right">
+                  <b-button
+                    type="submit"
+                    :disabled="submited"
+                    variant="primary"
+                    tabindex="3"
+                    v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
+                  />
+                  <b-button
+                    v-if="!taskKey"
+                    type="reset"
+                    :disabled="submited"
+                    variant="danger"
+                    tabindex="4"
+                  >
+                    Reset
+                  </b-button>
+                  <nuxt-link
+                    v-else
+                    tag="button"
+                    to="/"
+                    type="button"
+                    class="btn btn-secondary"
+                    tabindex="4"
+                  >
+                    Back
+                  </nuxt-link>
                 </div>
               </div>
             </div>
@@ -112,17 +117,28 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import moment from "moment"
 export default {
+   components: {
+      draggable
+    },
   data: () => ({
     taskKey: null,
     editor: "Guest",
     submited: false,
     valid: null,
+    enabled: true,
+    dragging: false,
     titleName: "",
     tasks: [{sSubject: "", sDescription: ""},{sSubject: "", sDescription: ""},{sSubject: "", sDescription: ""}]
     //input 3 box.
   }),
+  computed: {
+    draggingInfo() {
+      return this.dragging ? "under drag" : "";
+    }
+  },
   async asyncData({ redirect, params, $axios }) {
     if (params.id) {
       let sKey = parseInt(params.id)
@@ -132,11 +148,28 @@ export default {
       return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated }
     }
   },
-
   methods: {
+    checkMove(e) {
+      window.console.log("Future index: " + e.draggedContext.futureIndex);
+    },
+    onChange() {
+      //check titlename database
+      // let taskKey = this.taskKey 
+      // let vm = this
+      // let data = vm.tasks
+      // if (!taskKey) {
+      // vm.$axios.post("/api/history/new", {
+      //   titleName: vm.titleName
+      // })
+      // }else{
+      //   vm.$axios.post("/api/history/new", {
+      //   titleName: vm.titleName
+      // })
+      // }
+    },
     getThisDateTime(datetime) {
       return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
-     },
+    },
     onReset() {
       if (!this.taskKey) {
         this.titleName = ""
@@ -148,20 +181,60 @@ export default {
       }
     },
     onSubmit() {
+      let dataValid = this.tasks.map(e=>{
+        return {
+               sSubject : e.sSubject,
+               sDescription : e.sDescription,
+        }
+      })
       let array = []
       let set = new Set()
-      this.tasks.forEach(element => {
-        if (element.sSubject == "".trim()){
-        return this.valid = false
-        }
-        array.push(element.sSubject.trim())
-        set.add(element.sSubject.trim())
-      })
-      if (set.size!==array.length) {
-        this.valid = false
-        alert("List is same !")
+      let sameIndex = []
+      let sameSet = new Set()
+      for (let i=0;i<this.tasks.length;i++){
+      if (this.tasks[i].sSubject.trim() == "" && this.tasks[i].sDescription.trim() != ""){
+        this.tasks[i].sSubject = " "
+        this.tasks[i].valid = false
+        this.tasks[i].sSubject = ""
+        return
       }
-      else {
+        if (this.tasks[i].sSubject.trim() != ""){
+        array.push(this.tasks[i].sSubject.trim())
+        if(sameSet.has(this.tasks[i].sSubject.trim())){
+          sameIndex.push(array.length-1)
+        }
+        else if(set.has(this.tasks[i].sSubject.trim())){
+          sameIndex.push(array.indexOf(this.tasks[i].sSubject.trim()))
+          sameIndex.push(array.length-1)
+          sameSet.add(this.tasks[i].sSubject.trim())
+        }else{
+          set.add(this.tasks[i].sSubject.trim())
+        }
+      }else{
+        console.log(i,this.tasks[i].sSubject)
+        this.tasks.splice(i,1)
+        i--
+      }
+      }
+        if (sameIndex.length>0) {
+          for (let i=0;i<sameIndex.length;i++){
+          sameIndex[i]
+          this.tasks[sameIndex[i]].sSubject += " "
+          this.tasks[sameIndex[i]].valid = false
+          }
+          alert("list is same.")
+        }
+        else {
+        this.toSentSubmit()
+        }
+    },
+    addNewlist() {
+      this.tasks.push({sSubject: "", sDescription: ""})
+    },
+    delNewlist(i) {
+      this.tasks.splice(i, 1)
+    },
+    toSentSubmit(){
       let taskKey = this.taskKey 
       let vm = this
       let data = vm.tasks
@@ -173,6 +246,9 @@ export default {
         titleName: vm.titleName
       }).then(({ data }) => {
         if (data.success) {
+          for (const e of this.tasks) {
+          e.valid = true
+        }
           vm.$toast.success("This CheckList is Created.")
           vm.$router.push("/")
         } else {
@@ -184,7 +260,6 @@ export default {
         this.submited = false
       })
       }else{
-        this.valid = true
         this.submited = true
         vm.$axios.post("/api/history/new", {
         key: vm.taskKey,
@@ -192,6 +267,9 @@ export default {
         titleName: vm.titleName
       }).then(({ data }) => {
         if (data.success) {
+          for (const e of this.tasks) {
+          e.valid = true
+        }
           vm.$toast.success("This CheckList is Updated!")
           vm.$router.push("/")
         } else {
@@ -202,14 +280,8 @@ export default {
         vm.$toast.error(ex.message)
         this.submited = false
       })
-      }}
-    },
-    addNewlist() {
-      this.tasks.push({})
-    },
-    delNewlist(i) {
-      this.tasks.splice(i, 1)
-    },
+      }
+    }
   }
 }
 </script>
@@ -218,9 +290,9 @@ export default {
 small.time{
   padding-left: 48px;
 }
-/* button[type="submit"] {
+button[type="submit"] {
   min-width: 120px;
-} */
+}
 .survey-submit {
   position: fixed;
   padding: 25px;

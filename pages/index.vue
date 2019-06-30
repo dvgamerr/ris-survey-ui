@@ -41,7 +41,7 @@
         <div class="col-md-11">
           <br>
           <a href="new/">
-            <b-button type="button" variant="outline-primary">Add New Title +</b-button>
+            <b-button type="button" class="new-button" variant="outline-primary">Add New Title +</b-button>
           </a>
         </div>
       </b-row>
@@ -72,7 +72,7 @@ export default {
       this.$router.push({ name: "edit-id", params: { id: e } })
     },
     onDelete(e,i) {
-      if (confirm("Are you sure to Delete ?")) {
+      if (confirm("Are you sure you want to delete this item ?")) {
         let vm = this
         let data = vm.tasks
         let index = -1
@@ -99,17 +99,17 @@ export default {
 }
 </script>
 <style>
-button[type="button"] {
+.new-button {
   font-weight: bold;
   padding-left: 10px;
   padding-right: 10px;
 }
 .btn-icon {
-  font-size: 11px;
-  padding: 0rem 0.1rem;
-  margin-left: -5px;
-  margin-right: -5px;
-  margin-bottom: 3px;
+  padding-left: -10px;
+  padding-right: -10px;
+  margin-left: -2px;
+  margin-right: -2px;
+  margin-bottom: 2px;
 }
 .col-sm-25 {
   font-size: 22px;
