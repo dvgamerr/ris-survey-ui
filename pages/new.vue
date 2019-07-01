@@ -208,10 +208,11 @@ export default {
         console.log(i,this.tasks[i].sSubject)
         this.tasks.splice(i,1)
         i--
-        if(this.tasks.length==0){
-        this.tasks.push({sSubject: "", sDescription: ""})  
-        }
       }
+      }
+      if(this.tasks.length==0){
+        this.tasks.push({sSubject: "", sDescription: ""})
+        alert("At least 1 list!")
       }
         if (sameIndex.length>0) {
           for (let i=0;i<sameIndex.length;i++){
