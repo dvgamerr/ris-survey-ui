@@ -181,12 +181,6 @@ export default {
       }
     },
     onSubmit() {
-      let dataValid = this.tasks.map(e=>{
-        return {
-               sSubject : e.sSubject,
-               sDescription : e.sDescription,
-        }
-      })
       let array = []
       let set = new Set()
       let sameIndex = []
@@ -214,6 +208,9 @@ export default {
         console.log(i,this.tasks[i].sSubject)
         this.tasks.splice(i,1)
         i--
+        if(this.tasks.length==0){
+        this.tasks.push({sSubject: "", sDescription: ""})  
+        }
       }
       }
         if (sameIndex.length>0) {
