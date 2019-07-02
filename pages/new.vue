@@ -150,9 +150,6 @@ export default {
     }
   },
   methods: {
-    // onChange() {
-    //   // 
-    // },
     getThisDateTime(datetime) {
       return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
     },
@@ -161,49 +158,42 @@ export default {
       let set = new Set()
       let sameIndex = []
       let sameSet = new Set()
+      
       for (let i=0;i<this.tasks.length;i++){
         this.tasks[i].valid = null
-      if (this.tasks[i].sSubject.trim() == "" && this.tasks[i].sDescription.trim() != ""){
-        this.tasks[i].sSubject = " "
-        this.tasks[i].valid = false
-        this.tasks[i].sSubject = ""
-        return
-      }
-      if (this.tasks[i].sSubject.trim() != ""){
-        array.push(this.tasks[i].sSubject.trim())
-        if(sameSet.has(this.tasks[i].sSubject.trim())){
-          sameIndex.push(array.length-1)
+        if (this.tasks[i].sSubject.trim() == "" && this.tasks[i].sDescription.trim() != ""){
+          this.tasks[i].valid = false
+          this.$forceUpdate()
         }
-        else if(set.has(this.tasks[i].sSubject.trim())){
-          sameIndex.push(array.indexOf(this.tasks[i].sSubject.trim()))
-          sameIndex.push(array.length-1)
-          sameSet.add(this.tasks[i].sSubject.trim())
-        }else{
-          set.add(this.tasks[i].sSubject.trim())
-        }
-      }else if(this.tasks[i].sSubject==""&&this.tasks[i].sDescription== ""){
-        this.tasks[i].valid = false
-        // this.tasks.splice(i,1)
-        // i--
-      }
-      }
-      // if(this.tasks.length==0){
-      //   this.tasks.push({sSubject: "", sDescription: ""})
-      //   this.tasks.push({sSubject: "", sDescription: ""})
-      //   this.tasks.push({sSubject: "", sDescription: ""})
-      //   this.$toast.error("At least 1 list!")
-      // }
-        if (sameIndex.length>0) {
-          for (let i=0;i<sameIndex.length;i++){
-          sameIndex[i]
-          this.tasks[sameIndex[i]].sSubject += " "
-          this.tasks[sameIndex[i]].valid = false
+          if (this.tasks[i].sSubject.trim() != ""){
+            this.tasks[i].valid = null
+            array.push(this.tasks[i].sSubject.trim())
+              if(sameSet.has(this.tasks[i].sSubject.trim())){
+                sameIndex.push(array.length-1)
+              }
+              else if(set.has(this.tasks[i].sSubject.trim())){
+                sameIndex.push(array.indexOf(this.tasks[i].sSubject.trim()))
+                sameIndex.push(array.length-1)
+                sameSet.add(this.tasks[i].sSubject.trim())
+              }else{
+                set.add(this.tasks[i].sSubject.trim())
+              }
+          }else if(this.tasks[i].sSubject==""&&this.tasks[i].sDescription== ""){
+            this.tasks[i].valid = false
           }
-          this.$toast.error("list is same.")
+      }
+
+      if (sameIndex.length>0) {
+        for (let i=0;i<sameIndex.length;i++){
+          sameIndex[i]
+          this.tasks[sameIndex[i]].valid = false
         }
-        else {
+        this.$forceUpdate()
+        this.$toast.error("list is same.")
+      }
+      else {
         this.toSentSubmit()
-        }
+      }
     },
     addNewlist() {
       this.tasks.push({sSubject: "", sDescription: ""})
