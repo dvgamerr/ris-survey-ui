@@ -250,7 +250,7 @@ export default {
           vm.$toast.success("This CheckList is Updated!")
           vm.$router.push("/")
         } else {
-          vm.$toast.error(data.error == "Don't use space !" || "This Title is use already!" ? data.error : 'Error API')
+          vm.$toast.error(data.error == "Don't spacing in text box !" || "This Title is use already!" ? data.error : 'Error API')
         }
         this.submited = false
       }).catch(ex => {

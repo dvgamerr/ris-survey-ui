@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 
 // insert
     if (!key) {
-      if (titleName.trim() == "") throw new Error("Don't use space !")
+      if (titleName.trim() == "") throw new Error("Don't spacing in text box !")
       titleName = titleName.replace(/\s+/g," ")
       titleName = titleName.replace(/'/g, "\'\'")
       let checkTitle = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
