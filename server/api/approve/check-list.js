@@ -36,7 +36,7 @@ const main = async () => {
             let { source } = cmd.event
             if (!cmd.event.replyToken) continue
             if (!user) {
-              await request(`${posweb01}/ris-sd3/${source[`${source.type}Id`]}`, {
+              await request(`${posweb01}/ris-sd3/${cmd.event.replyToken}`, {
                 method: 'PUT',
                 body: { type: 'text', text: 'Reject!!' },
                 json: true
@@ -44,7 +44,7 @@ const main = async () => {
               continue
             }
 
-            await request(`${posweb01}/ris-sd3/${source[`${source.type}Id`]}`, {
+            await request(`${posweb01}/ris-sd3/${cmd.event.replyToken}`, {
               method: 'PUT',
               body: { type: 'text', text: 'Roger that, ...' },
               json: true
@@ -78,11 +78,6 @@ const main = async () => {
               await pool.request().query(command)
             }
             await LINE(lineMonitor(name, survey))
-            await request(`${posweb01}/ris-sd3/${source[`${source.type}Id`]}`, {
-              method: 'PUT',
-              body: { type: 'text', text: 'Successful.' },
-              json: true
-            })
           }
         }
       }
