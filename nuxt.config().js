@@ -21,7 +21,7 @@ module.exports = {
     './plugins/vue-toast.js'
   ],
   router: {
-    // middleware: ['auth'],
+    middleware: ['auth'],
     linkActiveClass: 'active',
     linkExactActiveClass: 'active'
   },
@@ -30,20 +30,21 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
-    'bootstrap-vue/nuxt'
+    'bootstrap-vue/nuxt',
+    // add
   ],
-  // auth: {
-  //   strategies: {
-  //     local: {
-  //       endpoints: {
-  //         login: { url: '/auth/login', method: 'post', propertyName: 'token' },
-  //         logout: { url: '/auth/logout', method: 'post' },
-  //         user: { url: '/auth/user', method: 'get', propertyName: 'user' }
-  //       }
-  //     }
-  //   },
-  //   redirect: { login: '/sign-in', logout: '/sign-in', home: '/' }
-  // },
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/auth/user', method: 'get', propertyName: 'user' }
+        }
+      }
+    },
+    redirect: { login: '/sign-in', logout: '/sign-in', home: '/' }
+  },
   fontawesome: {
     component: 'fa',
     imports: [

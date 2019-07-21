@@ -1,38 +1,35 @@
 <template>
   <div class="container pt-5 pb-3">
     <no-ssr>
-      <div>
-        <b-form @submit.prevent="onSubmit" @reset.prevent="onReset">
-          <div class="col-sm-36">
-            <b-row>
-              <b-col sm="4">
-                <h3>Title:</h3>
+        <b-form @submit.prevent="onSubmit">
+            <b-row class="justify-content-sm-center">
+              <b-col sm="auto">
+                <h3 class="title-text">Title :</h3>
               </b-col>
               <b-col sm="28">
                 <b-form-input
                   v-model="titleName"
-                  placeholder="Enter your Title"
+                  placeholder="Title Name"
                   maxlength="50"
                   required
                   tabindex="1"
                   autofocus
-                  @change="onChange"
                 />
               </b-col>
             </b-row>
             <b-row>
-              <small v-if="taskKey" class="time"><b>created : </b>{{ getThisDateTime(dCreated) }}</small>
+              <small v-if="taskKey" class="time"><b>created : </b>{{ getThisDateTime(dCreated) }}
+              <b>modified : </b>{{ getThisDateTime(dModified) }}</small>
             </b-row>
-            <hr>
-          </div>
-          <div>
-            <draggable tag="ul" :list="tasks" handle=".handle">
+            <draggable tag="ul" :list="tasks" handle=".handle" class="list-group">
               <li v-for="(e, i) in tasks" :key="i" class="list-group-item">
-                <div class="col-sm-36">
                   <b-row>
-                    <b-col sm="5">
+                    <b-col sm>
                       <i v-if="tasks.length > 1" class="handle" size="sm">
-                        <fa icon="align-justify" />
+                        <fa icon="grip-vertical" /><br>
+                        <fa icon="grip-vertical" /><br>
+                        <fa icon="grip-vertical" /><br>
+                        <fa icon="grip-vertical" />
                       </i>
                       <span class="no-title" v-text="`${(i+1)}. `" />
                     </b-col>
@@ -43,7 +40,7 @@
                         type="text"
                         class="form-control"
                         size="sm"
-                        placeholder="Enter your List"
+                        placeholder="List Name"
                         maxlength="50"
                         tabindex="2+`${(i+1)}.`"
                       />
@@ -51,43 +48,35 @@
                         v-model="e.sDescription"
                         class="form-control"
                         size="sm"
-                        placeholder="Enter your Description"
+                        placeholder="List Description"
                         maxlength="500"
                         tabindex="2+`${(i+1)}.`"
                         rows="2"
                       />
                     </b-col>
-                    <b-col sm="1">
-                      <b-button v-if="tasks.length > 1" class="closebox" size="sm" variant="danger" @click="delNewlist(i)">
+                    <b-col sm>
+                      <i v-if="tasks.length > 1" class="closebox" @click="delNewlist(i)">
                         <fa icon="times" />
-                      </b-button>
+                      </i>
                     </b-col>
                   </b-row>
-                </div>
               </li>
             </draggable>
-            <div class="col-sm-36">
-              <b-row class="row justify-content-md-center">
-                <b-col sm="16" />
-                <b-col>
-                  <b-button
-                    type="button"
-                    size="ssm"
-                    :variant="'outline-info'"
-                    tabindex="3"
-                    @click="addNewlist"
-                    v-text="'add new list +'"
-                  />
-                  <br><br><br><br>
-                </b-col>
-                <b-col sm="12" />
-              </b-row>
-            </div>
-          </div>
+            <br><br><br>
           <div class="survey-submit">
             <div class="container">
               <div class="row">
-                <div class="col-md-18" />
+                <div class="col-md-18">
+                  <b-button
+                    type="button"
+                    size="sm"
+                    :variant="'outline-info'"
+                    tabindex="3"
+                    @click="addNewlist"
+                    v-text="'Add new list +'"
+                  />
+                  <span v-text="`Now, ${getList} list(s).`"/>
+               </div>
                 <div class="col-md-18 text-right">
                   <b-button
                     type="submit"
@@ -110,7 +99,6 @@
             </div>
           </div>
         </b-form>
-      </div>
     </no-ssr>
   </div>
 </template>
@@ -123,8 +111,7 @@ export default {
   display: "Handle",
   instruction: "Drag using the handle icon",
   order: 5,
-  components: {draggable}
-  ,
+  components: {draggable},
     data: () => ({
     taskKey: null,
     editor: "Guest",
@@ -138,7 +125,10 @@ export default {
   computed: {
     draggingInfo() {
       return this.dragging
-    }
+    },
+    getList() {
+      return parseInt(this.tasks.length)
+    },
   },
   async asyncData({ redirect, params, $axios }) {
     if (params.id) {
@@ -146,7 +136,7 @@ export default {
       
       if (sKey == NaN) return redirect("/history")
       let { data } = await $axios("/api/history/new/" + params.id)
-      return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated }
+      return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated, dModified: data.dModified }
     }
   },
   methods: {
@@ -275,7 +265,11 @@ button[type="submit"] {
   padding-top: 8px;
   padding-bottom: 8px;
   margin-right: 50px;
+  line-height : 5px;
   cursor: grab;
+}
+.handle:active {
+    cursor: grabbing !important;
 }
 .close {
   float: right;
@@ -286,6 +280,13 @@ input {
   display: inline-block;
 }
 .closebox{
-  margin-left: 30px;
+  cursor: pointer;
+  margin-left: 120px;
+}
+.no-title{
+  line-height: 35px;
+}
+.title-text{
+  padding-left: 30px;
 }
 </style>

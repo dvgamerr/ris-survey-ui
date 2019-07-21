@@ -3,8 +3,8 @@
     <no-ssr>
       <b-row>
         <div class="col-sm-2 col-md-25">
-          <h2>All Survey CheckLists :</h2>
-          <small>sort by date modified and lastest 100 rows.</small>
+          <h2>All Title Survey Checklists</h2>
+          <small>That is sorted by date modified and shown the lastest 100 rows.</small>
           <br><br>
           <div v-for="(e, i) in tasks" :key="e.row" class="category-list">
             <div class="row">
@@ -31,7 +31,7 @@
               </div>
               <div class="text-right">
                 <small
-                  v-text="`${(e.nType) == '1' ? ' last created : ' : 'recent use : '} ${toTime(e.sCreated)}`"
+                  v-text="`${(e.nType) == '1' ? ' last created ' : 'recent use '} ${toTime(e.sCreated)}`"
                 />
               </div>
             </div>
@@ -117,5 +117,8 @@ export default {
 h2{
     margin: -1px;
     padding: 0px;
+}
+.text-right{
+  line-height: 35px;
 }
 </style>

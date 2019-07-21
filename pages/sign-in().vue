@@ -29,37 +29,33 @@
 
 <script>
 export default {
-  // auth: false,
-  // data: () => ({
-  //   username: '',
-  //   password: '',
-  //   submitted: false
-  // }),
-  // created () {
-  //   if (process.client && window.localStorage.getItem('auth._token.local') !== 'false') this.$router.replace('/')
-  // },
-  // methods: {
-  //   onLogin () {
-  //     if (!this.username || !this.password) return
-  //     this.submitted = true
-  //     this.$auth.loginWith('local', { data: { user: this.username.trim(), pass: this.password } }).then(() => {
-  //       if (this.$auth.loggedIn) {
-  //         this.$router.replace('/')
-  //       } else {
-  //         this.submitted = false
-  //         this.$toast.error('Username or Password worng.', { duration: 1000 })
-  //       }
-  //     }).catch(ex => {
-  //       this.submitted = false
-  //       this.$router.replace('/')
-  //       this.$toast.error(ex.message, { duration: 5000 })
-  //       console.log(ex)
-  //     })
-  //   }
-  // }
+  auth: false,
+  data: () => ({
+    username: '',
+    password: '',
+    submitted: false
+  }),
+  created () {
+    if (process.client && window.localStorage.getItem('auth._token.local') !== 'false') this.$router.replace('/')
+  },
+  methods: {
+    onLogin () {
+      if (!this.username || !this.password) return
+      this.submitted = true
+      this.$auth.loginWith('local', { data: { user: this.username.trim(), pass: this.password } }).then(() => {
+        if (this.$auth.loggedIn) {
+          this.$router.replace('/')
+        } else {
+          this.submitted = false
+          this.$toast.error('Username or Password worng.', { duration: 1000 })
+        }
+      }).catch(ex => {
+        this.submitted = false
+        this.$router.replace('/')
+        this.$toast.error(ex.message, { duration: 5000 })
+        console.log(ex)
+      })
+    }
+  }
 }
 </script>
-
-<style>
-
-</style>

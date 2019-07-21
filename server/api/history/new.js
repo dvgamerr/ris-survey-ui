@@ -7,6 +7,7 @@ module.exports = async (req, res) => {
   try {
     let { tasks, titleName, key } = req.body
     let created = moment() // 2019-03-01 18:04:09.503
+    let modified = moment()
     pool = await mssql()
 
 // insert
@@ -48,11 +49,15 @@ module.exports = async (req, res) => {
       titleName = titleName.replace(/\s+/g," ")
       if (recordCheck.sTitleName == titleName.trim()) {
         titleName = titleName.replace(/'/g, "\'\'")
-
-        let enableFalse = `UPDATE [dbo].[UserTaskDetail]SET [bEnabled] = 0, [nOrder] = 0 WHERE [nTaskId] = ${key}`
+        
+        let command1 = `UPDATE [dbo].[UserTask] SET [dModified] = CONVERT(DATETIME, '${modified.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121)
+        WHERE [nTaskId] = ${key}
+        `
+        let enableFalse = `UPDATE [dbo].[UserTaskDetail] SET [bEnabled] = 0, [nOrder] = 0 WHERE [nTaskId] = ${key}`
         for (const e of tasks) {
           if (e.sSubject.trim() == "") throw new Error("Don't spacing in text box !")
         }
+        await pool.request().query(command1)
         await pool.request().query(enableFalse)
         let i = -1
         for (const e of tasks) {
@@ -79,7 +84,8 @@ module.exports = async (req, res) => {
         let checkTitle = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
         let [recordTitle] = (await pool.request().query(checkTitle)).recordsets
         if (recordTitle.length > 0) throw new Error("This Title is use already!")
-        let command1 = `UPDATE [dbo].[UserTask] SET [sTitleName] = LTRIM(RTRIM('${titleName}')) WHERE [nTaskId] = ${key}
+        let command1 = `UPDATE [dbo].[UserTask] SET [sTitleName] = LTRIM(RTRIM('${titleName}')),
+        [dModified] = CONVERT(DATETIME, '${modified.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121) WHERE [nTaskId] = ${key}
         `
         let enableFalse = `UPDATE [dbo].[UserTaskDetail]SET [bEnabled] = 0, [nOrder] = 0 WHERE [nTaskId] = ${key}`
         for (const e of tasks) {

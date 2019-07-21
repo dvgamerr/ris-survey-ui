@@ -17,7 +17,8 @@
           <div v-else class="row">
             <div class="col-sm-36">
               <h3>{{ title }} {{ sMenu }}</h3>
-              <small v-if="!taskKey"><b>created :</b> {{ getThisDateTime(dCreated) }}<br></small>
+              <small v-if="!taskKey"><b>created :</b> {{ getThisDateTime(dCreated) }}
+              <b>modified :</b> {{ getThisDateTime(dModified) }}<br></small>
               <!--checked All button-->
               <b-button
                 type="button"
@@ -121,7 +122,7 @@
                       </span>
                       <span
                         :class="getTaskUncheck ? 'text-danger' : ''"
-                      >{{ !getTaskUncheck ? '' : `(${getTaskUncheck} Uncheck)` }}</span>
+                      >{{ !getTaskUncheck ? '' : `[ ${getTaskUncheck} Uncheck(s) ]` }}</span>
                     </div>
                   </div>
                   <div class="col-md-18 text-right">
@@ -206,7 +207,7 @@ export default {
       if (sKey == NaN) return redirect("/history")
       else {
         let { data } = await $axios("/api/history/list/" + params.no)
-        return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null }
+        return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null, dModified: data.dModified }
       }
     }
   },
