@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     if (!key) {
       if (titleName.trim() == "") throw new Error("Don't spacing in text box !")
       titleName = titleName.replace(/\s+/g," ")
-      titleName = titleName.replace(/'/g, "\'\'")
+      titleName = titleName.replace(/'/g, "''")
       let checkTitle = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
       let [recordTitle] = (await pool.request().query(checkTitle)).recordsets
       if (recordTitle.length > 0) throw new Error("This Title is use already!")
@@ -33,10 +33,10 @@ module.exports = async (req, res) => {
       for (const e of tasks) {
         i += 1
         e.sSubject = e.sSubject.replace(/\s+/g," ")
-        // e.sSubject = e.sSubject.replace(/'/g, "\'\'") for more space
+        // e.sSubject = e.sSubject.replace(/'/g, "''") for more space
         let command2 = `INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId],[nTaskId],[sSubject],[sDescription],[nOrder],[bEnabled],[dCreated])
       VALUES ((SELECT MAX([nTaskDetailID]) + 1 FROM [dbo].[UserTaskDetail]),((SELECT MAX([nTaskId]) FROM [dbo].[UserTask])),
-      LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "\'\'")}','${i}','True',
+      LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "''")}','${i}','True',
       CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121))
     `   
       await pool.request().query(command2)
@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
       let [[recordCheck]] = (await pool.request().query(check)).recordsets
       titleName = titleName.replace(/\s+/g," ")
       if (recordCheck.sTitleName == titleName.trim()) {
-        titleName = titleName.replace(/'/g, "\'\'")
+        titleName = titleName.replace(/'/g, "''")
         
         let command1 = `UPDATE [dbo].[UserTask] SET [dModified] = CONVERT(DATETIME, '${modified.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121)
         WHERE [nTaskId] = ${key}
@@ -63,14 +63,14 @@ module.exports = async (req, res) => {
         for (const e of tasks) {
           i += 1
           e.sSubject = e.sSubject.replace(/\s+/g," ")
-          // e.sSubject = e.sSubject.replace(/'/g, "\'\'") for more space
+          // e.sSubject = e.sSubject.replace(/'/g, "''") for more space
           let command2 = `IF EXISTS (SELECT * FROM UserTaskDetail WHERE [nTaskDetailID] = '${!e.nTaskDetailId ? '0' : e.nTaskDetailId}' and [bEnabled] = 1)
           UPDATE [dbo].[UserTaskdetail] SET [sSubject] = LTRIM(RTRIM('${e.sSubject}')),[sDescription] = 
-          '${(e.sDescription || '').replace(/'/g, "\'\'")}',[bEnabled] = 1 WHERE nTaskDetailId = ${e.nTaskDetailId == undefined ? '0' : e.nTaskDetailId}
+          '${(e.sDescription || '').replace(/'/g, "''")}',[bEnabled] = 1 WHERE nTaskDetailId = ${e.nTaskDetailId == undefined ? '0' : e.nTaskDetailId}
           ELSE
           INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId],[nTaskId],[sSubject],[sDescription],[nOrder],[bEnabled],[dCreated])
                 VALUES ((SELECT MAX([nTaskDetailID]) + 1 FROM [dbo].[UserTaskDetail]),${key},
-                LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "\'\'")}',${i+1},1,
+                LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "''")}',${i+1},1,
                 CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121))
     `
         console.log(command2)
@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
       } else {
         if (titleName.trim() == "") throw new Error("Don't spacing in text box !")
         titleName = titleName.replace(/\s+/g," ")
-        titleName = titleName.replace(/'/g, "\'\'")
+        titleName = titleName.replace(/'/g, "''")
         let checkTitle = `SELECT [sTitleName] from UserTask where [sTitleName] = LTRIM(RTRIM('${titleName}'))`
         let [recordTitle] = (await pool.request().query(checkTitle)).recordsets
         if (recordTitle.length > 0) throw new Error("This Title is use already!")
@@ -97,14 +97,14 @@ module.exports = async (req, res) => {
         for (const e of tasks) {
           i += 1
           e.sSubject = e.sSubject.replace(/\s+/g," ")
-          e.sSubject = e.sSubject.replace(/'/g, "\'\'")
+          e.sSubject = e.sSubject.replace(/'/g, "''")
           let command2 = `IF EXISTS (SELECT * FROM UserTaskDetail WHERE [nTaskDetailID] = '${e.nTaskDetailId == undefined ? '0' : e.nTaskDetailId}' and [bEnabled] = 1)
           UPDATE [dbo].[UserTaskdetail] SET [sSubject] = LTRIM(RTRIM('${e.sSubject}')),[sDescription] = 
-          '${(e.sDescription || '').replace(/'/g, "\'\'")}',[bEnabled] = 1 WHERE nTaskDetailId = ${e.nTaskDetailId == undefined ? '0' : e.nTaskDetailId}
+          '${(e.sDescription || '').replace(/'/g, "''")}',[bEnabled] = 1 WHERE nTaskDetailId = ${e.nTaskDetailId == undefined ? '0' : e.nTaskDetailId}
           ELSE
           INSERT INTO [dbo].[UserTaskdetail] ([nTaskDetailId],[nTaskId],[sSubject],[sDescription],[nOrder],[bEnabled],[dCreated])
                 VALUES ((SELECT MAX([nTaskDetailID]) + 1 FROM [dbo].[UserTaskDetail]),${key},
-                LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "\'\'")}',${i+1},1,
+                LTRIM(RTRIM('${e.sSubject}')),'${(e.sDescription || '').replace(/'/g, "''")}',${i+1},1,
                 CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121))
       `    
         await pool.request().query(command2)

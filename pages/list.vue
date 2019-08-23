@@ -18,7 +18,7 @@
             <div class="col-sm-36">
               <h3>{{ title }} {{ sMenu }}</h3>
               <small v-if="!taskKey"><b>created :</b> {{ getThisDateTime(dCreated) }}
-              <b>modified :</b> {{ getThisDateTime(dModified) }}<br></small>
+                <b>modified :</b> {{ getThisDateTime(dModified) }}<br></small>
               <!--checked All button-->
               <b-button
                 type="button"
@@ -196,7 +196,7 @@ export default {
     if (params.id) {
       let sKey = parseInt(params.id)
 
-      if (sKey == NaN) return redirect("/history")
+      if (isNaN(sKey)) return redirect("/history")
       let { data } = await $axios("/api/history/" + params.id)
 
       if (!data.records) return redirect("/history")
@@ -204,7 +204,7 @@ export default {
     }
     if (params.no) {
       let sKey = parseInt(params.no)
-      if (sKey == NaN) return redirect("/history")
+      if (isNaN(sKey)) return redirect("/history")
       else {
         let { data } = await $axios("/api/history/list/" + params.no)
         return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null, dModified: data.dModified }
@@ -284,44 +284,30 @@ export default {
     },
     onSubmit() {
       let vm = this
-      let data = vm.tasks.map(e => {
-        return {
-          nTaskDetailId: e.nTaskDetailId,
-          nOrder: e.nOrder,
-          sSubject: e.sSubject,
-          selected: e.selected,
-          status: e.problem ? e.status : "",
-          problem: e.problem || false,
-          reason: e.problem ? e.reason : ""
-        }
-      })
       this.submited = true
-      vm.$axios
-        .post("/api/history/submit", {
-          key: vm.taskKey,
-          username: vm.$auth.user.user_name,
-          name: vm.$auth.user.name,
-          tasks: vm.tasks
-        })
-        .then(({ data }) => {
-          if (data.success) {
-            if (!this.taskKey) {
-              vm.$toast.success("Thanks.")
-              vm.onReset()
-              vm.$router.push("/history")
-            } else {
-              vm.$toast.success("Task Updated.")
-              vm.$router.push("/history")
-            }
+      vm.$axios.post("/api/history/submit", {
+        key: vm.taskKey,
+        username: vm.$auth.user.user_name,
+        name: vm.$auth.user.name,
+        tasks: vm.tasks
+      }).then(({ data }) => {
+        if (data.success) {
+          if (!this.taskKey) {
+            vm.$toast.success("Thanks.")
+            vm.onReset()
+            vm.$router.push("/history")
           } else {
-            vm.$toast.error("Error API")
+            vm.$toast.success("Task Updated.")
+            vm.$router.push("/history")
           }
-          this.submited = false
-        })
-        .catch(ex => {
-          vm.$toast.error(ex.message)
-          this.submited = false
-        })
+        } else {
+          vm.$toast.error("Error API")
+        }
+        this.submited = false
+      }).catch(ex => {
+        vm.$toast.error(ex.message)
+        this.submited = false
+      })
     },
     onReason(e) {
       e.selected = false

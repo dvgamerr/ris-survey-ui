@@ -56,7 +56,7 @@ export default {
     editor: false,
     tasks: []
   }),
-  async asyncData({ redirect, params, $axios }) {
+  async asyncData({ $axios }) {
     let { data } = await $axios("/api/history/home")
     return { tasks: data }
   },
@@ -74,21 +74,12 @@ export default {
     onDelete(e,i) {
       if (confirm("Are you sure you want to delete this item ?")) {
         let vm = this
-        let data = vm.tasks
-        let index = -1
-        let item = this.tasks.filter((a, j) => {
-        if (a.nTaskId=== e) index = j
-        return a.nTaskId=== e
-      })
-      this.tasks.splice(i, 1)
-      vm.$axios
-        .post("/api/history/home/" + e)
-        .then(({ data }) => {
+        this.tasks.splice(i, 1)
+        this.$axios.post("/api/history/home/" + e).then(({ data }) => {
           if (data.success) {
             vm.$toast.error("Delete it!")
           }
-        })
-        .catch(ex => {
+        }).catch(ex => {
           vm.$toast.error(ex.message)
         })
       } else {

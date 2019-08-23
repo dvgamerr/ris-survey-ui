@@ -1,4 +1,4 @@
-const logger = require('@debuger')('SERVER')
+// const logger = require('@debuger')('SERVER')
 const LINE = require('@line')
 const request = require('request-promise')
 
@@ -17,7 +17,9 @@ const main = async () => {
     let data = null
     try {
       data = await request(`${posweb01}/db/ris-sd3/cmd`, { json: true })
-    } catch { }
+    } catch (ex) { 
+      //
+    }
     if (!data || data.length === 0) return loop(1000)
 
     for (const cmd of data) {
@@ -44,7 +46,7 @@ const main = async () => {
 
           pool = await mssql()
 
-          sql = `SELECT nTaskDetailId, sSubject, ISNULL(sDetail,'') sDetail, sDescription, sSolve, nOrder
+          let sql = `SELECT nTaskDetailId, sSubject, ISNULL(sDetail,'') sDetail, sDescription, sSolve, nOrder
           FROM UserTaskDetail d
           INNER JOIN UserTask t ON t.nTaskId = d.nTaskId
           WHERE d.bEnabled = 1 AND t.nTaskId = 1 ORDER BY nOrder ASC`
@@ -60,7 +62,7 @@ const main = async () => {
 
           for (const e of survey) {
             let command = `INSERT INTO [dbo].[UserTaskSubmit] ([nTaskDetailId],[sUsername],[sName],[sStatus],[sRemark],[nType],[nOrder],[dCheckIn],[dCreated],[nVersion])
-              VALUES (${e.nTaskDetailId},'${username.trim()}','${name}','${e.problem ? e.status : 'PASS'}', '${(e.reason || '').replace(`'`, `\'`)}'
+              VALUES (${e.nTaskDetailId},'${username.trim()}','${name}','${e.problem ? e.status : 'PASS'}', '${(e.reason || '').replace(`'`, `\\'`)}'
               , 1, ${e.nOrder}, CONVERT(DATETIME, '${created.format('YYYY-MM-DD HH:mm:ss.SSS')}', 121),  GETDATE(), 1)
             `
             await pool.request().query(command)

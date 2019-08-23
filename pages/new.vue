@@ -1,104 +1,101 @@
 <template>
   <div class="container pt-5 pb-3">
     <no-ssr>
-        <b-form @submit.prevent="onSubmit">
-            <b-row class="justify-content-sm-center">
-              <b-col sm="auto">
-                <h3 class="title-text">Title :</h3>
+      <b-form @submit.prevent="onSubmit">
+        <b-row class="justify-content-sm-center">
+          <b-col sm="auto">
+            <h3 class="title-text">Title :</h3>
+          </b-col>
+          <b-col sm="28">
+            <b-form-input
+              v-model="titleName"
+              placeholder="Title Name"
+              maxlength="50"
+              required
+              tabindex="1"
+              autofocus
+            />
+          </b-col>
+        </b-row>
+        <b-row>
+          <small v-if="taskKey" class="time"><b>created : </b>{{ getThisDateTime(dCreated) }}
+            <b>modified : </b>{{ getThisDateTime(dModified) }}</small>
+        </b-row>
+        <draggable tag="ul" :list="tasks" handle=".handle" class="list-group">
+          <li v-for="(e, i) in tasks" :key="i" class="list-group-item">
+            <b-row>
+              <b-col sm>
+                <i v-if="tasks.length > 1" class="handle" size="sm">
+                  <fa icon="grip-vertical" />
+                </i>
+                <span class="no-title" v-text="`${(i+1)}. `" />
               </b-col>
-              <b-col sm="28">
+              <b-col sm="25">
                 <b-form-input
-                  v-model="titleName"
-                  placeholder="Title Name"
+                  v-model="e.sSubject"
+                  :state="e.valid"
+                  type="text"
+                  class="form-control"
+                  size="sm"
+                  placeholder="List Name"
                   maxlength="50"
-                  required
-                  tabindex="1"
-                  autofocus
+                  tabindex="2+`${(i+1)}.`"
+                />
+                <b-form-textarea
+                  v-model="e.sDescription"
+                  class="form-control"
+                  size="sm"
+                  placeholder="List Description"
+                  maxlength="500"
+                  tabindex="2+`${(i+1)}.`"
+                  rows="2"
                 />
               </b-col>
+              <b-col sm>
+                <i v-if="tasks.length > 1" class="closebox" @click="delNewlist(i)">
+                  <fa icon="times" />
+                </i>
+              </b-col>
             </b-row>
-            <b-row>
-              <small v-if="taskKey" class="time"><b>created : </b>{{ getThisDateTime(dCreated) }}
-              <b>modified : </b>{{ getThisDateTime(dModified) }}</small>
-            </b-row>
-            <draggable tag="ul" :list="tasks" handle=".handle" class="list-group">
-              <li v-for="(e, i) in tasks" :key="i" class="list-group-item">
-                  <b-row>
-                    <b-col sm>
-                      <i v-if="tasks.length > 1" class="handle" size="sm">
-                        <fa icon="grip-vertical" /><br>
-                        <fa icon="grip-vertical" /><br>
-                        <fa icon="grip-vertical" /><br>
-                        <fa icon="grip-vertical" />
-                      </i>
-                      <span class="no-title" v-text="`${(i+1)}. `" />
-                    </b-col>
-                    <b-col sm="25">
-                      <b-form-input
-                        v-model="e.sSubject"
-                        :state="e.valid"
-                        type="text"
-                        class="form-control"
-                        size="sm"
-                        placeholder="List Name"
-                        maxlength="50"
-                        tabindex="2+`${(i+1)}.`"
-                      />
-                      <b-form-textarea
-                        v-model="e.sDescription"
-                        class="form-control"
-                        size="sm"
-                        placeholder="List Description"
-                        maxlength="500"
-                        tabindex="2+`${(i+1)}.`"
-                        rows="2"
-                      />
-                    </b-col>
-                    <b-col sm>
-                      <i v-if="tasks.length > 1" class="closebox" @click="delNewlist(i)">
-                        <fa icon="times" />
-                      </i>
-                    </b-col>
-                  </b-row>
-              </li>
-            </draggable>
-            <br><br><br>
-          <div class="survey-submit">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-18">
-                  <b-button
-                    type="button"
-                    size="sm"
-                    :variant="'outline-info'"
-                    tabindex="3"
-                    @click="addNewlist"
-                    v-text="'Add new list +'"
-                  />
-                  <span v-text="`Now, ${getList} list(s).`"/>
-               </div>
-                <div class="col-md-18 text-right">
-                  <b-button
-                    type="submit"
-                    :disabled="submited"
-                    variant="primary"
-                    tabindex="3"
-                    v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
-                  />
-                  <nuxt-link
-                    tag="button"
-                    to="/"
-                    type="button"
-                    class="btn btn-secondary"
-                    tabindex="4"
-                  >
-                    Back
-                  </nuxt-link>
-                </div>
+          </li>
+        </draggable>
+        <br><br><br>
+        <div class="survey-submit">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-18">
+                <b-button
+                  type="button"
+                  size="sm"
+                  :variant="'outline-info'"
+                  tabindex="3"
+                  @click="addNewlist"
+                  v-text="'Add new list +'"
+                />
+                <span v-text="`Now, ${getList} list(s).`" />
+              </div>
+              <div class="col-md-18 text-right">
+                <b-button
+                  type="submit"
+                  :disabled="submited"
+                  variant="primary"
+                  tabindex="3"
+                  v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
+                />
+                <nuxt-link
+                  tag="button"
+                  to="/"
+                  type="button"
+                  class="btn btn-secondary"
+                  tabindex="4"
+                >
+                  Back
+                </nuxt-link>
               </div>
             </div>
           </div>
-        </b-form>
+        </div>
+      </b-form>
     </no-ssr>
   </div>
 </template>
@@ -134,7 +131,7 @@ export default {
     if (params.id) {
       let sKey = parseInt(params.id)
       
-      if (sKey == NaN) return redirect("/history")
+      if (isNaN(sKey)) return redirect("/history")
       let { data } = await $axios("/api/history/new/" + params.id)
       return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated, dModified: data.dModified }
     }
@@ -194,43 +191,42 @@ export default {
     toSentSubmit(){
       let taskKey = this.taskKey 
       let vm = this
-      let data = vm.tasks
       if (!taskKey) {
-      this.submited = true
-      vm.$axios.post("/api/history/new", {
+        this.submited = true
+        vm.$axios.post('/api/history/new', {
+          key: vm.taskKey,
+          tasks: vm.tasks,
+          titleName: vm.titleName
+        }).then(({ data }) => {
+          if (data.success) {
+            for (const e of this.tasks) {
+            e.valid = true
+          }
+            vm.$toast.success('This CheckList is Created.')
+            vm.$router.push('/')
+          } else {
+            vm.$toast.error(data.error)
+          }
+          this.submited = false
+        }).catch(ex => {
+          vm.$toast.error(ex.message)
+          this.submited = false
+        })
+      } else {
+        this.submited = true
+        vm.$axios.post('/api/history/new', {
         key: vm.taskKey,
         tasks: vm.tasks,
         titleName: vm.titleName
       }).then(({ data }) => {
         if (data.success) {
           for (const e of this.tasks) {
-          e.valid = true
-        }
-          vm.$toast.success("This CheckList is Created.")
-          vm.$router.push("/")
+            e.valid = true
+          }
+          vm.$toast.success('This CheckList is Updated!')
+          vm.$router.push('/')
         } else {
           vm.$toast.error(data.error)
-        }
-        this.submited = false
-      }).catch(ex => {
-        vm.$toast.error(ex.message)
-        this.submited = false
-      })
-      }else{
-        this.submited = true
-        vm.$axios.post("/api/history/new", {
-        key: vm.taskKey,
-        tasks: vm.tasks,
-        titleName: vm.titleName
-      }).then(({ data }) => {
-        if (data.success) {
-          for (const e of this.tasks) {
-          e.valid = true
-        }
-          vm.$toast.success("This CheckList is Updated!")
-          vm.$router.push("/")
-        } else {
-          vm.$toast.error(data.error == "Don't spacing in text box !" || "This Title is use already!" ? data.error : 'Error API')
         }
         this.submited = false
       }).catch(ex => {
