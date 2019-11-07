@@ -56,8 +56,9 @@ module.exports = [
       display_name: String,
       telephone_no: String,
       user_name: String,
-      user_type: String,
       user_level: Number,
+      employee_id: String,
+      line_id: String,
       pwd: String,
       permission: String,
       enabled: {

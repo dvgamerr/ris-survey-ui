@@ -1,4 +1,4 @@
-const logger = require('@debuger')('SERVER')
+const logger = require('@touno-io/debuger')('SERVER')
 const LINE = require('@line')
 const moment = require('moment')
 

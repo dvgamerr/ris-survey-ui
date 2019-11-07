@@ -78,14 +78,14 @@ module.exports = async (usr, pwd, filter) => {
           display_name: user.displayName,
           telephone_no: user.telephoneNumber,
           user_name: user.sAMAccountName,
-          user_type: user.sAMAccountType,
+          employee_id: user.extensionAttribute1
         }
         if (!filter) return resolveBind(output); else result.push(output)
       })
 
       if (filter) res.on('search-end', () => {
         // logger.success(' - search-end:', !!entry)
-        return resolveBind(data)
+        return resolveBind(result)
       })
 
       res.on('search-error', err => {

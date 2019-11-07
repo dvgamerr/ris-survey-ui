@@ -19,6 +19,7 @@ router.get('/monitor/check-hour/:hour', require('./monitor/check-hour'))
 router.get('/monitor/inbound-transfer', require('./monitor/inbound-transfer'))
 router.get('/monitor/posdb-staging', require('./monitor/posdb-staging'))
 router.get('/monitor/line-bot', require('./monitor/line-bot'))
-// router.get('/monitor/flex/:color/:name/:desc', require('./monitor/flex'))
+
+router.get('/monitor/approve/check-list', require('./approve/check-list'))
 
 module.exports = router

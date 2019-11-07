@@ -1,4 +1,4 @@
-const logger = require('@debuger')('SERVER')
+const logger = require('@touno-io/debuger')('SERVER')
 const lineMonitor = require('@line-flex-monitor')
 const mssql = require('@mssql')
 const moment = require('moment')
@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
       LINE(lineMonitor(name, tasks))
       // LINE(`*[${topStatus}] ${topName}*\n${msg}\n\n(${name} at ${topDate})`, req.body)
     } else if (updated.length > 0) {
-      LINE(lineMonitor(name, updated, `http://10.0.80.52:3001/history/version/${key}`))
+      LINE(lineMonitor(name, updated, `http://10.0.80.52:3000/history/version/${key}`))
     }
     res.json({ success: true })
   } catch (ex) {

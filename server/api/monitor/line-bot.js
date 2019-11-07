@@ -1,4 +1,4 @@
-const logger = require('@debuger')('SERVER')
+const logger = require('@touno-io/debuger')('SERVER')
 const request = require('request-promise')
 const lineUsage = require('../../line/flex-line-usage')
 const LINE = require('@line')

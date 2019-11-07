@@ -1,25 +1,12 @@
 const ldapAuth = require('./ldap')
 const db = require('../mongodb')
-const bodyParser = require('body-parser')
 const jsonwebtoken = require('jsonwebtoken')
-const logger = require('../debuger')('AUTH')
+const logger = require('@touno-io/debuger')('AUTH')
 const md5 = require('md5')
 
 const { Router } = require('express')
 const router = Router()
 
-router.use(bodyParser.json())
-
-router.use((req, res, next) => {
-  const methodAllow = ['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT']
-  res.setHeader('Content-Type', 'application/json')
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Headers', '*')
-  res.setHeader('Access-Control-Allow-Credentials', 'true')
-  res.setHeader('Access-Control-Allow-Methods', methodAllow.join(','))
-  if (req.method === 'OPTIONS') return res.sendStatus(200)
-  next()
-})
 // Import API Routes
 const userData = [
   'name',
@@ -33,7 +20,7 @@ const userData = [
   'display_name',
   'telephone_no',
   'user_name',
-  'user_type',
+  'employee_id',
   'user_level',
   'lasted',
   'created'
@@ -188,7 +175,7 @@ router.post('/logout', (req, res) => (async () => {
   res.status(401).json({})
 }))
 
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3000
 logger.start(`Authentication listening on ${port}`)
 // Export the server middleware
 module.exports = {

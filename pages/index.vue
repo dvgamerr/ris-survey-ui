@@ -56,9 +56,12 @@ export default {
     editor: false,
     tasks: []
   }),
-  async asyncData({ $axios }) {
-    let { data } = await $axios("/api/history/home")
-    return { tasks: data }
+  async asyncData({ $axios, params }) {
+    let item = { data: [] }
+    if (!params.no) {
+      item = await $axios("/api/history/home")
+    }
+    return { tasks: item.data }
   },
   methods: {
     onView(e) {
