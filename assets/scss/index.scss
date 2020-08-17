@@ -4,9 +4,9 @@ $border-radius-lg:            .0rem;
 $border-radius-sm:            .0rem;
 // $font-size-base:              .78rem;
 
-@import 'bootstrap/scss/bootstrap.scss';
+@import "@coreui/coreui/scss/bootstrap";
+@import "@coreui/coreui/scss/coreui";
 @import 'bootstrap-vue/dist/bootstrap-vue.css';
-
 // .custom-control-label::before {
 //   position: absolute;
 //   top: 0.3rem;

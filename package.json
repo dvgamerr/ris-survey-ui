@@ -35,6 +35,7 @@
     "vuedraggable": "^2.23.0"
   },
   "devDependencies": {
+    "@coreui/coreui": "^3.2.2",
     "@nuxtjs/eslint-config": "^1.0.1",
     "@nuxtjs/pwa": "^3.0.0-beta.19",
     "babel-eslint": "^10.0.2",

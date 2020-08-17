@@ -48,11 +48,11 @@ router.get('/user', (req, res) => (async () => {
 
 const encodeToken = data => {
   const hashId = md5(data.mail + (+(new Date())))
-  return jsonwebtoken.sign({ hash: hashId, ...data }, process.env.JWT_KEYHASH)
+  return jsonwebtoken.sign({ hash: hashId, ...data }, process.env.AUTH_KEYHASH)
 }
 
 const decodeToken = data => {
-  return jsonwebtoken.verify(data, process.env.JWT_KEYHASH)
+  return jsonwebtoken.verify(data, process.env.AUTH_KEYHASH)
 }
 
 router.post('/recheck', (req, res) => (async () => {
