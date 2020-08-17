@@ -1,6 +1,6 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const lineNone = require('@line-flex-none')
-const LINE = require('@line')
+const lineNone = require('../../line/flex-none')
+const LINE = require('../../line')
 
 const moment = require('moment')
 

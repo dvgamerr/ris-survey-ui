@@ -1,8 +1,8 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const lineMonitor = require('@line-flex-monitor')
-const mssql = require('@mssql')
+const lineMonitor = require('../../line/flex-monitor')
+const mssql = require('../../mssql')
 const moment = require('moment')
-const LINE = require('@line')
+const LINE = require('../../line')
 
 module.exports = async (req, res) => {
   let pool = { close: () => { } }

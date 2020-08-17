@@ -1,5 +1,5 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const LINE = require('@line')
+const LINE = require('../../line')
 const moment = require('moment')
 
 module.exports = async (req, res) => {

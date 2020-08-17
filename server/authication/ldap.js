@@ -32,7 +32,7 @@ module.exports = async (usr, pwd, filter) => {
     const rejectBind = ex => {
       client.unbind(err => {
         ex = err || ex.lde_message || ex
-        // logger.warning('asyncBind-unbind:', ex)
+        // logger.warn('asyncBind-unbind:', ex)
         reject(ex)
       })
     }
@@ -50,12 +50,12 @@ module.exports = async (usr, pwd, filter) => {
 
   const asyncSearch = (suffix, options) => new Promise((resolve, reject) => {
     const resolveBind = (data) => client.unbind(err => {
-      // logger.warning('resolve-unbind:', !err)
+      // logger.warn('resolve-unbind:', !err)
       if (err) return reject(err)
       resolve(data)
     })
     const rejectBind = (ex) => client.unbind(err => {
-      // logger.warning('reject-unbind:', !err)
+      // logger.warn('reject-unbind:', !err)
       reject(err || ex )
     })
 

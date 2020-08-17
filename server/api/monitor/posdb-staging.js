@@ -1,7 +1,7 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const mssql = require('@mssql')
+const mssql = require('../../mssql')
 const lineStaging = require('../../line/flex-staging')
-const LINE = require('@line')
+const LINE = require('../../line')
 const moment = require('moment')
 
 

@@ -42,7 +42,7 @@ router.get('/user', (req, res) => (async () => {
     res.json({})
   }
 })().catch((ex) => {
-  logger.warning(ex)
+  logger.warn(ex)
   res.json({})
 }))
 
@@ -71,7 +71,7 @@ router.post('/recheck', (req, res) => (async () => {
     res.json({ error: ex.message || ex })
   }
 })().catch(ex => {
-  logger.warning(ex)
+  logger.warn(ex)
   res.json({ error: ex.message || ex })
 }))
 
@@ -164,14 +164,14 @@ router.post('/login', (req, res) => (async () => {
     res.json({ error: ex.message || ex })
   }
 })().catch(ex => {
-  logger.warning(ex)
+  logger.warn(ex)
   res.status(401).json({ error: ex.message || ex })
 }))
 
 router.post('/logout', (req, res) => (async () => {
   res.json({})
 })().catch((ex) => {
-  logger.warning(ex)
+  logger.warn(ex)
   res.status(401).json({})
 }))
 

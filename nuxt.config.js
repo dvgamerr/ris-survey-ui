@@ -2,6 +2,7 @@ const pkg = require('./package')
 
 module.exports = {
   mode: 'universal',
+  telemetry: false,
   head: {
     title: 'SURVEY-POS',
     meta: [
@@ -30,8 +31,7 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/pwa',
-    'bootstrap-vue/nuxt',
-    // add
+    'bootstrap-vue/nuxt'
   ],
   auth: {
     strategies: {
@@ -53,17 +53,5 @@ module.exports = {
   },
   bootstrapVue: { bootstrapCSS: false },
   axios: { baseURL: process.env.AXIOS_BASE_URL || 'http://10.0.80.52:3000/' },
-  build: {
-    extend(config, ctx) {
-      // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/
-        })
-      }
-    }
-  }
+  build: { }
 }

@@ -1,10 +1,10 @@
 // const logger = require('@touno-io/debuger')('SERVER')
-const LINE = require('@line')
+const LINE = require('../../line')
 const request = require('request-promise')
 
-const db = require('@mongo')
-const lineMonitor = require('@line-flex-monitor')
-const mssql = require('@mssql')
+const db = require('../../mongodb')
+const lineMonitor = require('../../line/flex-monitor.js')
+const mssql = require('../../mssql')
 
 const moment = require('moment')
 const posweb01 = `http://posgateway.cmg.co.th:3000/`

@@ -1,5 +1,5 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const mssql = require('@mssql')
+const mssql = require('../../mssql')
 
 module.exports = async (req, res) => {
   let pool = { close: () => { } }
