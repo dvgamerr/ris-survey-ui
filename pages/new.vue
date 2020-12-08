@@ -18,8 +18,10 @@
           </b-col>
         </b-row>
         <b-row>
-          <small v-if="taskKey" class="time"><b>created : </b>{{ getThisDateTime(dCreated) }}
-            <b>modified : </b>{{ getThisDateTime(dModified) }}</small>
+          <small v-if="taskKey" class="time"
+            ><b>created : </b>{{ getThisDateTime(dCreated) }} <b>modified : </b
+            >{{ getThisDateTime(dModified) }}</small
+          >
         </b-row>
         <draggable tag="ul" :list="tasks" handle=".handle" class="list-group">
           <li v-for="(e, i) in tasks" :key="i" class="list-group-item">
@@ -28,7 +30,7 @@
                 <i v-if="tasks.length > 1" class="handle" size="sm">
                   <fa icon="grip-vertical" />
                 </i>
-                <span class="no-title" v-text="`${(i+1)}. `" />
+                <span class="no-title" v-text="`${i + 1}. `" />
               </b-col>
               <b-col sm="25">
                 <b-form-input
@@ -52,14 +54,18 @@
                 />
               </b-col>
               <b-col sm>
-                <i v-if="tasks.length > 1" class="closebox" @click="delNewlist(i)">
+                <i
+                  v-if="tasks.length > 1"
+                  class="closebox"
+                  @click="delNewlist(i)"
+                >
                   <fa icon="times" />
                 </i>
               </b-col>
             </b-row>
           </li>
         </draggable>
-        <br><br><br>
+        <br /><br /><br />
         <div class="survey-submit">
           <div class="container">
             <div class="row">
@@ -80,7 +86,9 @@
                   :disabled="submited"
                   variant="primary"
                   tabindex="3"
-                  v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
+                  v-text="
+                    submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'
+                  "
                 />
                 <nuxt-link
                   tag="button"
@@ -102,22 +110,42 @@
 
 <script>
 import draggable from 'vuedraggable'
-import moment from "moment"
+import moment from 'moment'
 export default {
-  name: "Handle",
-  display: "Handle",
-  instruction: "Drag using the handle icon",
+  name: 'Handle',
+  display: 'Handle',
+  instruction: 'Drag using the handle icon',
   order: 5,
-  components: {draggable},
-    data: () => ({
+  components: { draggable },
+  async asyncData({ redirect, params, $axios }) {
+    if (params.id) {
+      const sKey = parseInt(params.id)
+
+      if (isNaN(sKey)) return redirect('/history')
+      const { data } = await $axios('/api/history/new/' + params.id)
+      return {
+        titleName: data.titleName,
+        tasks: data.tasks,
+        taskKey: params.id,
+        editor: data.editor,
+        dCreated: data.dCreated,
+        dModified: data.dModified,
+      }
+    }
+  },
+  data: () => ({
     taskKey: null,
-    editor: "Guest",
+    editor: 'Guest',
     submited: false,
     valid: null,
     dragging: false,
-    titleName: "",
-    tasks: [{sSubject: "", sDescription: ""},{sSubject: "", sDescription: ""},{sSubject: "", sDescription: ""}]
-    //input 3 box.
+    titleName: '',
+    tasks: [
+      { sSubject: '', sDescription: '' },
+      { sSubject: '', sDescription: '' },
+      { sSubject: '', sDescription: '' },
+    ],
+    // input 3 box.
   }),
   computed: {
     draggingInfo() {
@@ -127,123 +155,124 @@ export default {
       return parseInt(this.tasks.length)
     },
   },
-  async asyncData({ redirect, params, $axios }) {
-    if (params.id) {
-      let sKey = parseInt(params.id)
-      
-      if (isNaN(sKey)) return redirect("/history")
-      let { data } = await $axios("/api/history/new/" + params.id)
-      return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated, dModified: data.dModified }
-    }
-  },
   methods: {
     getThisDateTime(datetime) {
-      return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
+      return moment(datetime).format('DD MMMM YYYY [ - ] HH:mm')
     },
     onSubmit() {
-      let array = []
-      let set = new Set()
-      let sameIndex = []
-      let sameSet = new Set()
-      
-      for (let i=0;i<this.tasks.length;i++){
+      const array = []
+      const set = new Set()
+      const sameIndex = []
+      const sameSet = new Set()
+
+      for (let i = 0; i < this.tasks.length; i++) {
         this.tasks[i].valid = null
-        if (this.tasks[i].sSubject.trim() == "" && this.tasks[i].sDescription.trim() != ""){
+        if (
+          this.tasks[i].sSubject.trim() == '' &&
+          this.tasks[i].sDescription.trim() != ''
+        ) {
           this.tasks[i].valid = false
           this.$forceUpdate()
         }
-          if (this.tasks[i].sSubject.trim() != ""){
-            this.tasks[i].valid = null
-            array.push(this.tasks[i].sSubject.trim())
-              if(sameSet.has(this.tasks[i].sSubject.trim())){
-                sameIndex.push(array.length-1)
-              }
-              else if(set.has(this.tasks[i].sSubject.trim())){
-                sameIndex.push(array.indexOf(this.tasks[i].sSubject.trim()))
-                sameIndex.push(array.length-1)
-                sameSet.add(this.tasks[i].sSubject.trim())
-              }else{
-                set.add(this.tasks[i].sSubject.trim())
-              }
-          }else if(this.tasks[i].sSubject==""&&this.tasks[i].sDescription== ""){
-            this.tasks[i].valid = false
+        if (this.tasks[i].sSubject.trim() != '') {
+          this.tasks[i].valid = null
+          array.push(this.tasks[i].sSubject.trim())
+          if (sameSet.has(this.tasks[i].sSubject.trim())) {
+            sameIndex.push(array.length - 1)
+          } else if (set.has(this.tasks[i].sSubject.trim())) {
+            sameIndex.push(array.indexOf(this.tasks[i].sSubject.trim()))
+            sameIndex.push(array.length - 1)
+            sameSet.add(this.tasks[i].sSubject.trim())
+          } else {
+            set.add(this.tasks[i].sSubject.trim())
           }
+        } else if (
+          this.tasks[i].sSubject == '' &&
+          this.tasks[i].sDescription == ''
+        ) {
+          this.tasks[i].valid = false
+        }
       }
 
-      if (sameIndex.length>0) {
-        for (let i=0;i<sameIndex.length;i++){
+      if (sameIndex.length > 0) {
+        for (let i = 0; i < sameIndex.length; i++) {
           sameIndex[i]
           this.tasks[sameIndex[i]].valid = false
         }
         this.$forceUpdate()
-        this.$toast.error("list is same.")
-      }
-      else {
+        this.$toast.error('list is same.')
+      } else {
         this.toSentSubmit()
       }
     },
     addNewlist() {
-      this.tasks.push({sSubject: "", sDescription: ""})
+      this.tasks.push({ sSubject: '', sDescription: '' })
     },
     delNewlist(i) {
       this.tasks.splice(i, 1)
     },
-    toSentSubmit(){
-      let taskKey = this.taskKey 
-      let vm = this
+    toSentSubmit() {
+      const taskKey = this.taskKey
+      const vm = this
       if (!taskKey) {
         this.submited = true
-        vm.$axios.post('/api/history/new', {
-          key: vm.taskKey,
-          tasks: vm.tasks,
-          titleName: vm.titleName
-        }).then(({ data }) => {
-          if (data.success) {
-            for (const e of this.tasks) {
-            e.valid = true
-          }
-            vm.$toast.success('This CheckList is Created.')
-            vm.$router.push('/')
-          } else {
-            vm.$toast.error(data.error)
-          }
-          this.submited = false
-        }).catch(ex => {
-          vm.$toast.error(ex.message)
-          this.submited = false
-        })
+        vm.$axios
+          .post('/api/history/new', {
+            key: vm.taskKey,
+            tasks: vm.tasks,
+            titleName: vm.titleName,
+          })
+          .then(({ data }) => {
+            if (data.success) {
+              for (const e of this.tasks) {
+                e.valid = true
+              }
+              vm.$toast.success('This CheckList is Created.')
+              vm.$router.push('/')
+            } else {
+              vm.$toast.error(data.error)
+            }
+            this.submited = false
+          })
+          .catch((ex) => {
+            vm.$toast.error(ex.message)
+            this.submited = false
+          })
       } else {
         this.submited = true
-        vm.$axios.post('/api/history/new', {
-        key: vm.taskKey,
-        tasks: vm.tasks,
-        titleName: vm.titleName
-      }).then(({ data }) => {
-        if (data.success) {
-          for (const e of this.tasks) {
-            e.valid = true
-          }
-          vm.$toast.success('This CheckList is Updated!')
-          vm.$router.push('/')
-        } else {
-          vm.$toast.error(data.error)
-        }
-        this.submited = false
-      }).catch(ex => {
-        vm.$toast.error(ex.message)
-        this.submited = false
-      })
+        vm.$axios
+          .post('/api/history/new', {
+            key: vm.taskKey,
+            tasks: vm.tasks,
+            titleName: vm.titleName,
+          })
+          .then(({ data }) => {
+            if (data.success) {
+              for (const e of this.tasks) {
+                e.valid = true
+              }
+              vm.$toast.success('This CheckList is Updated!')
+              vm.$router.push('/')
+            } else {
+              vm.$toast.error(data.error)
+            }
+            this.submited = false
+          })
+          .catch((ex) => {
+            vm.$toast.error(ex.message)
+            this.submited = false
+          })
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
-small.time{
+small.time {
   padding-left: 48px;
 }
-button[type="submit"] {
+button[type='submit'] {
   min-width: 120px;
 }
 .survey-submit {
@@ -261,11 +290,11 @@ button[type="submit"] {
   padding-top: 8px;
   padding-bottom: 8px;
   margin-right: 50px;
-  line-height : 5px;
+  line-height: 5px;
   cursor: grab;
 }
 .handle:active {
-    cursor: grabbing !important;
+  cursor: grabbing !important;
 }
 .close {
   float: right;
@@ -275,14 +304,14 @@ button[type="submit"] {
 input {
   display: inline-block;
 }
-.closebox{
+.closebox {
   cursor: pointer;
   margin-left: 120px;
 }
-.no-title{
+.no-title {
   line-height: 35px;
 }
-.title-text{
+.title-text {
   padding-left: 30px;
 }
 </style>

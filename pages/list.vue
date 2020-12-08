@@ -11,23 +11,33 @@
                 <b>{{ editor }}</b>
                 at {{ getTaskDateTime }}
               </small>
-              <hr>
+              <hr />
             </div>
           </div>
           <div v-else class="row">
             <div class="col-sm-36">
               <h3>{{ title }} {{ sMenu }}</h3>
-              <small v-if="!taskKey"><b>created :</b> {{ getThisDateTime(dCreated) }}
-                <b>modified :</b> {{ getThisDateTime(dModified) }}<br></small>
+              <small v-if="!taskKey"
+                ><b>created :</b> {{ getThisDateTime(dCreated) }}
+                <b>modified :</b> {{ getThisDateTime(dModified) }}<br
+              /></small>
               <!--checked All button-->
               <b-button
                 type="button"
                 size="ssm"
-                :variant="tasks.length !== tasks.filter(e => e.selected).length ? 'outline-info' : 'outline-secondary'"
+                :variant="
+                  tasks.length !== tasks.filter((e) => e.selected).length
+                    ? 'outline-info'
+                    : 'outline-secondary'
+                "
                 @click="onCheckAll"
-                v-text="tasks.length !== tasks.filter(e => e.selected).length ? 'Checked All' : 'Unchecked All'"
+                v-text="
+                  tasks.length !== tasks.filter((e) => e.selected).length
+                    ? 'Checked All'
+                    : 'Unchecked All'
+                "
               />
-              <hr>
+              <hr />
             </div>
           </div>
           <div class="row mb-5 pb-5">
@@ -50,40 +60,66 @@
                       class="problem"
                       type="button"
                       size="sm"
-                      :variant="!e.problem ? 'outline-secondary' : 'outline-danger'"
+                      :variant="
+                        !e.problem ? 'outline-secondary' : 'outline-danger'
+                      "
                       @click="onReason(e)"
                       v-text="!e.problem ? 'Problem' : 'Cancel'"
                     />
                     <b class="checker-text">
-                      <span v-text="(i + 1) + '. ' + e.sSubject" />
+                      <span v-text="i + 1 + '. ' + e.sSubject" />
                     </b>
                     <!--Label-->
-                    <span class="checker-text d-none d-md-inline" v-html="e.sDetail" />
+                    <span
+                      class="checker-text d-none d-md-inline"
+                      v-html="e.sDetail"
+                    />
                     <div v-if="e.problem">
                       <!--problem-->
                       <div>
                         <span class="badge badge-light">STATUS :</span>
                         <b-button
-                          :class="[ 'status', e.status === 'FAIL' ? 'active' : '' ]"
+                          :class="[
+                            'status',
+                            e.status === 'FAIL' ? 'active' : '',
+                          ]"
                           type="button"
                           size="sm"
-                          :variant="e.status === 'FAIL' ? 'outline-danger' : 'outline-secondary'"
+                          :variant="
+                            e.status === 'FAIL'
+                              ? 'outline-danger'
+                              : 'outline-secondary'
+                          "
                           @click.prevent="onStatus(e, 'FAIL')"
                           v-text="'FAIL'"
                         />
                         <b-button
-                          :class="[ 'status', e.status === 'WARN' ? 'active' : '' ]"
+                          :class="[
+                            'status',
+                            e.status === 'WARN' ? 'active' : '',
+                          ]"
                           type="button"
                           size="sm"
-                          :variant="e.status === 'WARN' ? 'outline-warning' : 'outline-secondary'"
+                          :variant="
+                            e.status === 'WARN'
+                              ? 'outline-warning'
+                              : 'outline-secondary'
+                          "
                           @click.prevent="onStatus(e, 'WARN')"
                           v-text="'WARN'"
                         />
                         <b-button
-                          :class="[ 'status', e.status === 'INFO' ? 'active' : '' ]"
+                          :class="[
+                            'status',
+                            e.status === 'INFO' ? 'active' : '',
+                          ]"
                           type="button"
                           size="sm"
-                          :variant="e.status === 'INFO' ? 'outline-info' : 'outline-secondary'"
+                          :variant="
+                            e.status === 'INFO'
+                              ? 'outline-info'
+                              : 'outline-secondary'
+                          "
                           @click.prevent="onStatus(e, 'INFO')"
                           v-text="'INFO'"
                         />
@@ -105,7 +141,9 @@
                   </b-form-checkbox>
                 </b-form-group>
               </div>
-              <div v-if="tasks.length === 0" class="text-center">No Transaction</div>
+              <div v-if="tasks.length === 0" class="text-center">
+                No Transaction
+              </div>
             </div>
             <div class="survey-submit">
               <div class="container">
@@ -120,9 +158,11 @@
                         <b>Fail:</b>
                         {{ getTaskProblem }}
                       </span>
-                      <span
-                        :class="getTaskUncheck ? 'text-danger' : ''"
-                      >{{ !getTaskUncheck ? '' : `[ ${getTaskUncheck} Uncheck(s) ]` }}</span>
+                      <span :class="getTaskUncheck ? 'text-danger' : ''">{{
+                        !getTaskUncheck
+                          ? ''
+                          : `[ ${getTaskUncheck} Uncheck(s) ]`
+                      }}</span>
                     </div>
                   </div>
                   <div class="col-md-18 text-right">
@@ -130,7 +170,9 @@
                       type="submit"
                       :disabled="submited"
                       variant="primary"
-                      v-text="submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'"
+                      v-text="
+                        submited ? 'Approving...' : taskKey ? 'Save' : 'Submit'
+                      "
                     />
                     <b-button
                       v-if="!taskKey"
@@ -161,71 +203,74 @@
 </template>
 
 <script>
-import moment from "moment"
+import moment from 'moment'
 export default {
+  async asyncData({ redirect, params, $axios }) {
+    if (params.id) {
+      const sKey = parseInt(params.id)
+
+      if (isNaN(sKey)) return redirect('/history')
+      const { data } = await $axios('/api/history/' + params.id)
+
+      if (!data.records) return redirect('/history')
+      return { editor: data.editor, tasks: data.records, taskKey: params.id }
+    }
+    if (params.no) {
+      const sKey = parseInt(params.no)
+      if (isNaN(sKey)) return redirect('/history')
+      else {
+        const { data } = await $axios('/api/history/list/' + params.no)
+        return {
+          title: data.title,
+          dCreated: data.dCreated,
+          tasks: data.tasks,
+          taskKey: null,
+          dModified: data.dModified,
+        }
+      }
+    }
+  },
   data: () => ({
     taskKey: null,
-    editor: "Guest",
+    editor: 'Guest',
     submited: false,
     current: moment(),
     problem: 0,
-    title: "",
-    dCreated: "",
-    tasks: []
+    title: '',
+    dCreated: '',
+    tasks: [],
   }),
   computed: {
     getTaskDateTime() {
-      return moment(this.taskKey, "YYYYMMDDHHmmssSSS").format(
-        "DD MMMM YYYY HH:mm:ss"
+      return moment(this.taskKey, 'YYYYMMDDHHmmssSSS').format(
+        'DD MMMM YYYY HH:mm:ss'
       )
     },
     getDateTime() {
-      return this.current.format("DD MMMM YYYY HH:mm:ss")
+      return this.current.format('DD MMMM YYYY HH:mm:ss')
     },
     getTaskUncheck() {
       return this.tasks.length - this.getTaskSuccess - this.getTaskProblem
     },
     getTaskSuccess() {
-      return this.tasks.filter(e => e.selected).length
+      return this.tasks.filter((e) => e.selected).length
     },
     getTaskProblem() {
       return this.problem
-    }
-  },
-  async asyncData({ redirect, params, $axios }) {
-    if (params.id) {
-      let sKey = parseInt(params.id)
-
-      if (isNaN(sKey)) return redirect("/history")
-      let { data } = await $axios("/api/history/" + params.id)
-
-      if (!data.records) return redirect("/history")
-      return { editor: data.editor, tasks: data.records, taskKey: params.id }
-    }
-    if (params.no) {
-      let sKey = parseInt(params.no)
-      if (isNaN(sKey)) return redirect("/history")
-      else {
-        let { data } = await $axios("/api/history/list/" + params.no)
-        return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null, dModified: data.dModified }
-      }
-    }
+    },
   },
   created() {
     if (!this.taskKey) {
-      setInterval(
-        (() => {
-          this.current = moment()
-        }).bind(this),
-        500
-      )
+      setInterval(() => {
+        this.current = moment()
+      }, 500)
       if (process.client) {
-        let survey = window.localStorage.getItem("survey.tasks")
+        let survey = window.localStorage.getItem('survey.tasks')
         if (survey) {
           survey = JSON.parse(survey)
           if (
             this.tasks.length === survey.length &&
-            survey.filter(s => s.reason !== "" || s.selected).length > 0
+            survey.filter((s) => s.reason !== '' || s.selected).length > 0
           )
             this.tasks = survey
           this.problem = 0
@@ -239,30 +284,28 @@ export default {
   },
   methods: {
     getThisDateTime(datetime) {
-      return moment(datetime).format("DD MMMM YYYY [ - ] HH:mm")
+      return moment(datetime).format('DD MMMM YYYY [ - ] HH:mm')
     },
     onSave() {
       if (!this.taskKey && process.client && this.tasks) {
-        this.$nextTick(
-          (() => {
-            window.localStorage.setItem(
-              "survey.tasks",
-              JSON.stringify(this.tasks)
-            )
-          }).bind(this)
-        )
+        this.$nextTick(() => {
+          window.localStorage.setItem(
+            'survey.tasks',
+            JSON.stringify(this.tasks)
+          )
+        })
       }
     },
     onCheckAll() {
-      let checkAll =
-        this.tasks.length === this.tasks.filter(e => e.selected).length
+      const checkAll =
+        this.tasks.length === this.tasks.filter((e) => e.selected).length
       if (checkAll) return this.onReset()
 
       for (const e of this.tasks) {
         e.selected = true
         e.problem = false
-        e.reason = ""
-        e.status = ""
+        e.reason = ''
+        e.status = ''
       }
       this.problem = 0
       this.$forceUpdate()
@@ -274,46 +317,49 @@ export default {
         for (const e of this.tasks) {
           e.selected = false
           e.problem = false
-          e.reason = ""
-          e.status = ""
+          e.reason = ''
+          e.status = ''
         }
         this.$forceUpdate()
         if (process.client && this.tasks)
-          window.localStorage.removeItem("survey.tasks")
+          window.localStorage.removeItem('survey.tasks')
       }
     },
     onSubmit() {
-      let vm = this
+      const vm = this
       this.submited = true
-      vm.$axios.post("/api/history/submit", {
-        key: vm.taskKey,
-        username: vm.$auth.user.user_name,
-        name: vm.$auth.user.name,
-        tasks: vm.tasks
-      }).then(({ data }) => {
-        if (data.success) {
-          if (!this.taskKey) {
-            vm.$toast.success("Thanks.")
-            vm.onReset()
-            vm.$router.push("/history")
+      vm.$axios
+        .post('/api/history/submit', {
+          key: vm.taskKey,
+          username: vm.$auth.user.user_name,
+          name: vm.$auth.user.name,
+          tasks: vm.tasks,
+        })
+        .then(({ data }) => {
+          if (data.success) {
+            if (!this.taskKey) {
+              vm.$toast.success('Thanks.')
+              vm.onReset()
+              vm.$router.push('/history')
+            } else {
+              vm.$toast.success('Task Updated.')
+              vm.$router.push('/history')
+            }
           } else {
-            vm.$toast.success("Task Updated.")
-            vm.$router.push("/history")
+            vm.$toast.error('Error API')
           }
-        } else {
-          vm.$toast.error("Error API")
-        }
-        this.submited = false
-      }).catch(ex => {
-        vm.$toast.error(ex.message)
-        this.submited = false
-      })
+          this.submited = false
+        })
+        .catch((ex) => {
+          vm.$toast.error(ex.message)
+          this.submited = false
+        })
     },
     onReason(e) {
       e.selected = false
       e.problem = !e.problem
-      if (!e.status) e.status = e.problem ? "FAIL" : ""
-      if (!e.problem) e.status = ""
+      if (!e.status) e.status = e.problem ? 'FAIL' : ''
+      if (!e.problem) e.status = ''
       this.$forceUpdate()
 
       this.problem = 0
@@ -333,14 +379,14 @@ export default {
       this.$forceUpdate()
       if (this.taskKey) return
       this.onSave()
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
 .checker-text {
-  font-family: "Segoe UI";
+  font-family: 'Segoe UI';
   font-size: 13px;
 }
 button.status {
@@ -349,7 +395,7 @@ button.status {
   font-size: 10px;
   font-weight: bold;
 }
-button[type="submit"] {
+button[type='submit'] {
   min-width: 120px;
 }
 .survey-submit {
@@ -362,8 +408,8 @@ button[type="submit"] {
   background-color: #f8f9fa;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-h3{
-    margin: -1px;
-    padding: 0px;
+h3 {
+  margin: -1px;
+  padding: 0px;
 }
 </style>

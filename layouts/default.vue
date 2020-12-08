@@ -11,11 +11,9 @@ import navigation from '~/components/navigation.vue'
 
 export default {
   components: {
-    navigation
-  }
+    navigation,
+  },
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

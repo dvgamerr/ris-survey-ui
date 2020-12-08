@@ -2,11 +2,11 @@ const logger = require('@touno-io/debuger')('SERVER')
 const mssql = require('../../mssql')
 
 module.exports = async (req, res) => {
-  let page = parseInt(req.query.p || 1)
+  const page = parseInt(req.query.p || 1)
   if (isNaN(page)) return res.json([])
   let pool = { close: () => {} }
   try {
-    let sql = `SELECT * FROM (	
+    const sql = `SELECT * FROM (	
       SELECT ROW_NUMBER() OVER (ORDER BY nType ASC, dCreated DESC) AS nRow, 
 		nType, nTaskId, sTitleName, bEnabled, sCreated FROM 
 		(
@@ -24,9 +24,9 @@ module.exports = async (req, res) => {
       ) a
     ) AS r WHERE nRow >= ${page} * 100 - 99 AND nRow <= ${page} * 100
     `
-      
+
     pool = await mssql()
-    let [ records ] = (await pool.request().query(sql)).recordsets
+    const [records] = (await pool.request().query(sql)).recordsets
     res.json(records)
   } catch (ex) {
     logger.error(ex)

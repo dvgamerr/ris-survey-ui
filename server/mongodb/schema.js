@@ -9,16 +9,16 @@ module.exports = [
     schema: Schema({
       segment: {
         type: String,
-        index: true
+        index: true,
       },
       field: {
         type: String,
-        index: true
+        index: true,
       },
       value: Mixed,
       type: String,
-      created: Date
-    })
+      created: Date,
+    }),
   },
   {
     id: 'PageSync',
@@ -30,8 +30,8 @@ module.exports = [
       crontab: String,
       data: Object,
       updated: Date,
-      created: Date
-    })
+      created: Date,
+    }),
   },
   {
     id: 'User',
@@ -39,15 +39,15 @@ module.exports = [
     schema: Schema({
       name: {
         type: String,
-        index: true
+        index: true,
       },
       mail: {
         type: String,
-        index: true
+        index: true,
       },
       title: {
         type: String,
-        index: true
+        index: true,
       },
       company: String,
       department: String,
@@ -63,23 +63,23 @@ module.exports = [
       permission: String,
       enabled: {
         type: Boolean,
-        index: true
+        index: true,
       },
       activate: {
         type: Boolean,
-        index: true
+        index: true,
       },
       token: String,
       lasted: {
         type: Date,
-        index: true
+        index: true,
       },
       updated: Date,
       created: {
         type: Date,
-        index: true
+        index: true,
       },
-    })
+    }),
   },
   {
     id: 'UserHistory',
@@ -87,15 +87,15 @@ module.exports = [
     schema: Schema({
       mail: {
         type: String,
-        index: true
+        index: true,
       },
       error: String,
       token: String,
       created: {
         type: Date,
-        index: true
+        index: true,
       },
-    })
+    }),
   },
   {
     id: 'Snippet',
@@ -111,8 +111,8 @@ module.exports = [
       private: Boolean,
       content: String,
       updated: Date,
-      created: Date
-    })
+      created: Date,
+    }),
   },
   {
     id: 'ServiceLog',
@@ -122,8 +122,8 @@ module.exports = [
       group: { type: String, index: true },
       status: { type: String, index: true },
       message: String,
-      created: { type: Date, index: true }
-    })
+      created: { type: Date, index: true },
+    }),
   },
   {
     id: 'TerminalCommand',
@@ -131,7 +131,7 @@ module.exports = [
     schema: Schema({
       cmd: String,
       template: String,
-      created: Date
-    })
-  }
+      created: Date,
+    }),
+  },
 ]

@@ -1,16 +1,18 @@
 const logger = require('@touno-io/debuger')('SERVER')
-const mssql = require('../../mssql')
 const moment = require('moment')
+const mssql = require('../../mssql')
 
 module.exports = async (req, res) => {
-  let key = parseInt(req.params.id)
+  const key = parseInt(req.params.id)
   if (isNaN(key)) return res.json({})
-  let pool = { close: () => { } }
+  let pool = { close: () => {} }
   logger.info('History ID:', req.params.id, 'Deleted.')
-  let dCheckIn = moment(req.params.id, 'YYYYMMDDHHmmssSSS')
+  const dCheckIn = moment(req.params.id, 'YYYYMMDDHHmmssSSS')
   if (!moment.isMoment(dCheckIn)) return res.json({})
   try {
-    let sql = `DELETE FROM UserTaskSubmit WHERE dCheckIn = CONVERT(DATETIME, '${dCheckIn.format('YYYY-MM-DD HH:mm:ss.SSS')}')`
+    const sql = `DELETE FROM UserTaskSubmit WHERE dCheckIn = CONVERT(DATETIME, '${dCheckIn.format(
+      'YYYY-MM-DD HH:mm:ss.SSS'
+    )}')`
     pool = await mssql()
     await pool.request().query(sql)
     return res.json({})

@@ -1,10 +1,10 @@
 const moment = require('moment')
 
 module.exports = (msg) => {
-  let topName = `Monitor DailyClose`
-  let topDate = moment().format('HH:mm, DD MMM YYYY')
+  const topName = `Monitor DailyClose`
+  const topDate = moment().format('HH:mm, DD MMM YYYY')
 
-  let flexMessage = {
+  const flexMessage = {
     type: 'bubble',
     body: {
       type: 'box',
@@ -14,8 +14,8 @@ module.exports = (msg) => {
           type: 'box',
           layout: 'horizontal',
           contents: [
-            { type: 'text', text: topName, weight: 'bold', size: 'sm' }
-          ]
+            { type: 'text', text: topName, weight: 'bold', size: 'sm' },
+          ],
         },
         { type: 'separator', margin: 'sm' },
         {
@@ -23,8 +23,17 @@ module.exports = (msg) => {
           layout: 'vertical',
           margin: 'xl',
           contents: [
-            { type: 'text', text: msg, wrap: true, color: '#333333', weight: 'bold', size: 'sm', align: 'center', flex: 12 }
-          ]
+            {
+              type: 'text',
+              text: msg,
+              wrap: true,
+              color: '#333333',
+              weight: 'bold',
+              size: 'sm',
+              align: 'center',
+              flex: 12,
+            },
+          ],
         },
         { type: 'separator', margin: 'lg' },
         {
@@ -33,17 +42,22 @@ module.exports = (msg) => {
           margin: 'md',
           contents: [
             { type: 'text', text: topDate, color: '#666666', size: 'xxs' },
-            { type: 'text', text: 'Schedule', color: '#aaaaaa', size: 'xxs', align: 'end' }
-          ]
-        }
-      ]
-    }
+            {
+              type: 'text',
+              text: 'Schedule',
+              color: '#aaaaaa',
+              size: 'xxs',
+              align: 'end',
+            },
+          ],
+        },
+      ],
+    },
   }
-
 
   return {
     type: 'flex',
     altText: msg,
-    contents: flexMessage
+    contents: flexMessage,
   }
 }
