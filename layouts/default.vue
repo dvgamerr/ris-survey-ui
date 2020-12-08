@@ -37,4 +37,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+#__chakra-app > main {
+  height: 100vh;
+}
+</style>
