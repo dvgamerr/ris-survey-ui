@@ -168,13 +168,13 @@ export default {
       for (let i = 0; i < this.tasks.length; i++) {
         this.tasks[i].valid = null
         if (
-          this.tasks[i].sSubject.trim() == '' &&
-          this.tasks[i].sDescription.trim() != ''
+          this.tasks[i].sSubject.trim() === '' &&
+          this.tasks[i].sDescription.trim() !== ''
         ) {
           this.tasks[i].valid = false
           this.$forceUpdate()
         }
-        if (this.tasks[i].sSubject.trim() != '') {
+        if (this.tasks[i].sSubject.trim() !== '') {
           this.tasks[i].valid = null
           array.push(this.tasks[i].sSubject.trim())
           if (sameSet.has(this.tasks[i].sSubject.trim())) {
@@ -187,8 +187,8 @@ export default {
             set.add(this.tasks[i].sSubject.trim())
           }
         } else if (
-          this.tasks[i].sSubject == '' &&
-          this.tasks[i].sDescription == ''
+          this.tasks[i].sSubject === '' &&
+          this.tasks[i].sDescription === ''
         ) {
           this.tasks[i].valid = false
         }
@@ -196,7 +196,7 @@ export default {
 
       if (sameIndex.length > 0) {
         for (let i = 0; i < sameIndex.length; i++) {
-          sameIndex[i]
+          // sameIndex[i]
           this.tasks[sameIndex[i]].valid = false
         }
         this.$forceUpdate()

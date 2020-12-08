@@ -203,6 +203,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/no-v-html */
 import moment from 'moment'
 export default {
   async asyncData({ redirect, params, $axios }) {
@@ -265,7 +266,8 @@ export default {
         this.current = moment()
       }, 500)
       if (process.client) {
-        let survey = window.localStorage.getItem('survey.tasks')
+        let survey = null
+        // window.localStorage.getItem('survey.tasks')
         if (survey) {
           survey = JSON.parse(survey)
           if (

@@ -54,11 +54,7 @@ export default {
     submitted: false,
   }),
   created() {
-    if (
-      process.client &&
-      window.localStorage.getItem('auth._token.local') !== 'false'
-    )
-      this.$router.replace('/')
+    if (process.client && !this.$auth.user) this.$router.replace('/')
   },
   methods: {
     onLogin() {

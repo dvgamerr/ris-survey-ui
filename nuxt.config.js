@@ -1,13 +1,13 @@
-const pkg = require('./package')
+import { description } from './package.json'
 
-module.exports = {
+export default {
   telemetry: false,
   head: {
     title: 'SURVEY-POS',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'description', name: 'description', content: description },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -22,13 +22,10 @@ module.exports = {
     linkExactActiveClass: 'active',
   },
   modules: [
-    // https://go.nuxtjs.dev/chakra
     '@chakra-ui/nuxt',
-    // https://go.nuxtjs.dev/emotion
     '@nuxtjs/emotion',
-    // https://go.nuxtjs.dev/axios
+    '@nuxtjs/auth',
     '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
   ],
   serverMiddleware: [{ path: '/api', handler: '~/api/index.js' }],
