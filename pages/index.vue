@@ -56,12 +56,12 @@ export default {
     editor: false,
     tasks: []
   }),
-  async asyncData({ $axios, params }) {
+  async created() {
     let item = { data: [] }
-    if (!params.no) {
-      item = await $axios("/api/history/home")
+    if (!this.$route.params.no) {
+      item = await this.$axios("/api/history/home")
     }
-    return { tasks: item.data }
+    this.tasks = item.data
   },
   methods: {
     onView(e) {

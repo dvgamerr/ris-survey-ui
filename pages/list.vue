@@ -192,26 +192,32 @@ export default {
       return this.problem
     }
   },
-  async asyncData({ redirect, params, $axios }) {
+  async created() {
+    const params = this.$route.params
     if (params.id) {
       let sKey = parseInt(params.id)
 
-      if (isNaN(sKey)) return redirect("/history")
-      let { data } = await $axios("/api/history/" + params.id)
+      if (isNaN(sKey)) return this.$router.replace("/history")
+      let { data } = await this.$axios("/api/history/" + params.id)
 
-      if (!data.records) return redirect("/history")
-      return { editor: data.editor, tasks: data.records, taskKey: params.id }
+      if (!data.records) return this.$router.replace("/history")
+      this.editor = data.editor
+      this.tasks = data.records
+      this.taskKey = params.id
     }
     if (params.no) {
       let sKey = parseInt(params.no)
-      if (isNaN(sKey)) return redirect("/history")
+      if (isNaN(sKey)) return this.$router.replace("/history")
       else {
-        let { data } = await $axios("/api/history/list/" + params.no)
-        return { title: data.title, dCreated: data.dCreated, tasks: data.tasks, taskKey: null, dModified: data.dModified }
+        let { data } = await this.$axios("/api/history/list/" + params.no)
+        this.title = data.title
+        this.dCreated = data.dCreated
+        this.tasks = data.tasks
+        this.taskKey = null
+        this.dModified = data.dModified
       }
     }
-  },
-  created() {
+
     if (!this.taskKey) {
       setInterval(
         (() => {

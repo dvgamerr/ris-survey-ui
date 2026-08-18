@@ -82,11 +82,10 @@ export default {
     history: [],
     editor: false
   }),
-  async asyncData({ $axios }) {
-    let { data } = await $axios("/api/history");
-    return { history: data };
+  async created() {
+    let { data } = await this.$axios("/api/history");
+    this.history = data;
   },
-  created() {},
   methods: {
     toTime(datetime, i) {
       return i > 0

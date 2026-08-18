@@ -127,13 +127,19 @@ export default {
       return parseInt(this.tasks.length)
     },
   },
-  async asyncData({ redirect, params, $axios }) {
+  async created() {
+    const params = this.$route.params
     if (params.id) {
       let sKey = parseInt(params.id)
-      
-      if (isNaN(sKey)) return redirect("/history")
-      let { data } = await $axios("/api/history/new/" + params.id)
-      return { titleName: data.titleName, tasks: data.tasks, taskKey: params.id, editor: data.editor, dCreated: data.dCreated, dModified: data.dModified }
+
+      if (isNaN(sKey)) return this.$router.replace("/history")
+      let { data } = await this.$axios("/api/history/new/" + params.id)
+      this.titleName = data.titleName
+      this.tasks = data.tasks
+      this.taskKey = params.id
+      this.editor = data.editor
+      this.dCreated = data.dCreated
+      this.dModified = data.dModified
     }
   },
   methods: {
@@ -145,7 +151,7 @@ export default {
       let set = new Set()
       let sameIndex = []
       let sameSet = new Set()
-      
+
       for (let i=0;i<this.tasks.length;i++){
         this.tasks[i].valid = null
         if (this.tasks[i].sSubject.trim() == "" && this.tasks[i].sDescription.trim() != ""){
@@ -189,7 +195,7 @@ export default {
       this.tasks.splice(i, 1)
     },
     toSentSubmit(){
-      let taskKey = this.taskKey 
+      let taskKey = this.taskKey
       let vm = this
       if (!taskKey) {
         this.submited = true
