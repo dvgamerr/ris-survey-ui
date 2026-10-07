@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: survey
+      POSTGRES_PASSWORD: survey
+      POSTGRES_DB: survey
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U survey -d survey"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  web:
+    build: .
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      DATABASE_URL: postgres://survey:survey@db:5432/survey
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-docker-compose-dev-secret-change-me-0123456789}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      # the e2e container reaches this service as http://web:3000 (not "app": Chromium forces https on the HSTS-preloaded .app TLD)
+      TRUSTED_ORIGINS: http://web:3000,http://localhost:3000
+      # set to "true" (or remove) outside of local / e2e use
+      AUTH_RATE_LIMIT: ${AUTH_RATE_LIMIT:-false}
+      TZ: Asia/Bangkok
+    depends_on:
+      db:
+        condition: service_healthy
+
+  e2e:
+    profiles: ["e2e"]
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    environment:
+      E2E_BASE_URL: http://web:3000
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - ./playwright-report:/e2e/playwright-report
+      - ./test-results:/e2e/test-results
+
+volumes:
+  pgdata:

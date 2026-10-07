@@ -1,0 +1,9 @@
+node_modules
+dist
+.astro
+.git
+.worktrees
+test-results
+playwright-report
+.env
+*.log
