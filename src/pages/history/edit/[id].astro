@@ -1,0 +1,21 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import SurveyForm from '../../../components/SurveyForm'
+import { getSurvey, latestEntries } from '../../../lib/repo'
+import { dateTimeSec } from '../../../lib/format'
+
+const survey = await getSurvey(Astro.params.id ?? '')
+if (!survey) return Astro.redirect('/history')
+const items = latestEntries(survey.entries).map(e => ({
+  item_id: e.item_id, subject: e.subject, description: e.description,
+  selected: e.status === 'PASS', problem: e.status !== 'PASS',
+  status: (e.status === 'PASS' ? '' : e.status) as 'FAIL' | 'WARN' | 'INFO' | '', reason: e.remark
+}))
+---
+<Layout title="Edit History | SURVEY-POS">
+  <div class="container pt-5 pb-3">
+    <h3>History Survey</h3>
+    <small data-testid="survey-meta">{survey.title} by <b>{survey.editors}</b> at {dateTimeSec(survey.created_at)}</small>
+    <SurveyForm client:load mode="edit" surveyId={survey.survey_id} items={items} />
+  </div>
+</Layout>

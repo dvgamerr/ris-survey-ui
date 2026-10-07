@@ -1,0 +1,43 @@
+---
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../styles/global.css'
+
+interface Props { title?: string, bare?: boolean }
+const { title = 'SURVEY-POS', bare = false } = Astro.props
+const user = Astro.locals.user
+const path = Astro.url.pathname
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Tasks checking list." />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body>
+    {!bare && user && (
+      <nav class="navbar navbar-dark bg-dark navbar-expand">
+        <a class="navbar-brand" href="/"><b>[POS]</b> SERVER SURVEY</a>
+        <ul class="navbar-nav ml-auto align-items-center">
+          <li class="nav-item"><a class={`nav-link ${path === '/' ? 'active' : ''}`} href="/">Home</a></li>
+          <li class="nav-item"><a class={`nav-link ${path.startsWith('/history') ? 'active' : ''}`} href="/history">History</a></li>
+          <li class="nav-item"><span class="navbar-text mx-2" data-testid="user-name">{user.name}</span></li>
+          <li class="nav-item"><button type="button" class="btn btn-sm btn-outline-light" id="logout">Logout</button></li>
+        </ul>
+      </nav>
+    )}
+    <slot />
+    <div id="toasts" aria-live="polite"></div>
+    <script>
+      import { showFlash } from '../lib/toast'
+      import { authClient } from '../lib/auth-client'
+      showFlash()
+      document.getElementById('logout')?.addEventListener('click', async () => {
+        await authClient.signOut()
+        location.href = '/sign-in'
+      })
+    </script>
+  </body>
+</html>
