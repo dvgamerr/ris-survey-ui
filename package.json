@@ -1,0 +1,38 @@
+{
+  "name": "ris-survey-ui",
+  "version": "3.0.0",
+  "description": "Tasks checking list.",
+  "author": "Mr.Kananek T.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "start": "bun ./dist/server/entry.mjs",
+    "migrate": "bun scripts/migrate.ts",
+    "check": "astro check",
+    "test": "bun test src",
+    "e2e": "playwright test",
+    "e2e:docker": "docker compose --profile e2e up --build --abort-on-container-exit --exit-code-from e2e"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.7",
+    "@astrojs/preact": "^6.0.6",
+    "astro": "^7.3.6",
+    "better-auth": "^1.7.7",
+    "bootstrap": "4",
+    "dayjs": "^1.11.23",
+    "kysely": "^0.29.6",
+    "pg": "^8.23.1",
+    "preact": "^11.0.0",
+    "sortablejs": "^1.15.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@playwright/test": "^1.63.0",
+    "@types/bun": "^1.4.2",
+    "@types/pg": "^8.23.1",
+    "@types/sortablejs": "^1.15.9",
+    "typescript": "^5.9"
+  }
+}
