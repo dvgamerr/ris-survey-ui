@@ -1,0 +1,40 @@
+---
+import Layout from '../../../layouts/Layout.astro'
+import { getSurvey, latestEntries } from '../../../lib/repo'
+import { statusColor, statusIcon } from '../../../lib/logic'
+import { dateTimeSec } from '../../../lib/format'
+
+const survey = await getSurvey(Astro.params.id ?? '')
+if (!survey) return Astro.redirect('/history')
+const latest = latestEntries(survey.entries)
+const older = (itemId: number, version: number) => survey.entries.filter(e => e.item_id === itemId && e.version !== version)
+const verb = (v: number) => (v !== 1 ? 'updated' : 'submitted')
+---
+<Layout title="History Version | SURVEY-POS">
+  <div class="container pt-5 pb-3">
+    <h3>History Version</h3>
+    <small data-testid="survey-meta">{survey.title} by <b>{survey.editors}</b> at {dateTimeSec(survey.created_at)}</small>
+    <hr />
+    {latest.map((e, i) => (
+      <div class="mb-3" data-testid="version-item">
+        <span class={`text-${statusColor[e.status]}`} aria-label={e.status}>{statusIcon[e.status]}</span>
+        <b class="history-text">{i + 1}. {e.subject}</b>
+        <small>at {dateTimeSec(e.created_at)} {verb(e.version)} by {e.user_name}</small>
+        {e.description && <div class="history-text d-none d-md-block ml-35">{e.description}</div>}
+        {e.status !== 'PASS' && <pre class="ml-35">{e.remark}</pre>}
+        {e.version !== 1 && (
+          <div class="history-detail" data-testid="older-versions">
+            {older(e.item_id, e.version).map(d => (
+              <div>
+                <span class={`text-${statusColor[d.status]}`} aria-label={d.status}>{statusIcon[d.status]}</span>
+                {dateTimeSec(d.created_at)} {verb(d.version)} by {d.user_name}
+                {d.status !== 'PASS' && <pre>{d.remark}</pre>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+    <a href="/history" class="btn btn-secondary mt-3">Back</a>
+  </div>
+</Layout>

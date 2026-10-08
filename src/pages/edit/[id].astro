@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import TaskEditor from '../../components/TaskEditor'
+import { getTask } from '../../lib/repo'
+import { dateTime } from '../../lib/format'
+
+const id = Number(Astro.params.id)
+const task = Number.isInteger(id) && id > 0 ? await getTask(id) : null
+if (!task) return Astro.redirect('/')
+const meta = `created : ${dateTime(task.created_at)} modified : ${task.modified_at ? dateTime(task.modified_at) : '-'}`
+---
+<Layout title="Edit Checklist | SURVEY-POS">
+  <div class="container pt-5 pb-3">
+    <TaskEditor client:load taskId={task.task_id} title={task.title} meta={meta} items={task.items} />
+  </div>
+</Layout>

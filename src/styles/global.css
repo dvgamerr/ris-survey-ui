@@ -1,0 +1,41 @@
+:root { --brand: #4caf50; }
+body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+.container { max-width: 1140px; }
+pre { background: #e4e4e4; padding: 5px 10px; border: #ccc solid 1px; border-radius: 2px; margin: 8px 0; white-space: pre-wrap; }
+h2, h3 { margin: -1px; padding: 0; }
+.btn, .form-control, .list-group-item { border-radius: 0; }
+.btn-ssm { font-weight: bold; font-size: 10px; padding: 2px 6px; }
+.new-button { font-weight: bold; padding-left: 10px; padding-right: 10px; }
+.btn-icon { font-size: 13px; padding: 0 .25rem; margin-top: -2px; }
+.category-list { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
+.category-list .title { font-size: 22px; }
+.group-history { padding-bottom: 10px; }
+.text-inline { font-size: 14px; padding: 3px 9px; }
+.checker-text { font-size: 13px; }
+.history-text { font-size: 14px; }
+.history-detail { font-size: 12px; color: #525252; padding-left: 20px; }
+.ml-35 { margin-left: 20px; }
+button.status { width: 40px; padding: 0; font-size: 10px; font-weight: bold; }
+button.problem { font-size: 11px; padding: 2px 9px; }
+button[type="submit"] { min-width: 120px; }
+textarea.reason { max-width: 600px; width: 100%; }
+.survey-item { padding: .5rem 0 .75rem; border-bottom: 1px solid rgba(0,0,0,.06); }
+.survey-item.invalid { border-left: 3px solid #dc3545; padding-left: 8px; }
+.survey-submit { position: fixed; padding: 20px; width: 100vw; bottom: 0; left: 0; min-height: 70px; background: #f8f9fa; border-top: 1px solid rgba(0,0,0,.1); z-index: 5; }
+.handle { cursor: grab; user-select: none; padding: 0 12px; color: #888; }
+.handle:active { cursor: grabbing; }
+.closebox { cursor: pointer; color: #888; background: none; border: 0; font-size: 18px; }
+.closebox:hover { color: #dc3545; }
+.sortable-ghost { opacity: .4; }
+.sidenav { min-height: 100vh; display: flex; align-items: center; background-color: #000; overflow-x: hidden; padding-top: 20px; }
+.login-main-text { padding: 60px; color: #fff; }
+.login-main-text h2 { font-weight: 300; }
+.main { padding: 0 10px; min-height: 100vh; display: flex; align-items: center; }
+@media screen and (min-width: 768px) {
+  .main { margin-left: 40%; }
+  .sidenav { width: 40%; position: fixed; z-index: 1; top: 0; left: 0; }
+}
+#toasts { position: fixed; top: 70px; right: 16px; z-index: 2000; display: flex; flex-direction: column; gap: 8px; }
+.app-toast { min-width: 220px; max-width: 360px; padding: 10px 14px; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.app-toast.success { background: #28a745; }
+.app-toast.error { background: #dc3545; }

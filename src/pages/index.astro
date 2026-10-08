@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { listHome } from '../lib/repo'
+import { fromNow } from '../lib/format'
+
+const page = Number(Astro.url.searchParams.get('p')) || 1
+const tasks = await listHome(page)
+---
+<Layout title="SURVEY-POS">
+  <div class="container pt-5 pb-3">
+    <h2>All Title Survey Checklists</h2>
+    <small>That is sorted by date modified and shown the latest 100 rows.</small>
+    <div class="mt-4" data-testid="task-list">
+      {tasks.map((t, i) => (
+        <div class="category-list" data-testid="task-row" data-task-id={t.task_id}>
+          <div>
+            <button type="button" class="btn btn-sm btn-icon" data-delete={t.task_id} aria-label={`Delete ${t.title}`} title="Delete">🗑</button>
+            <a class="btn btn-sm btn-icon" href={`/edit/${t.task_id}`} aria-label={`Edit ${t.title}`} title="Edit">✎</a>
+            <a class="title" href={`/task/${t.task_id}`}>{i + 1}. {t.title}</a>
+          </div>
+          <small class="text-right">{t.type === 1 ? 'last created' : 'recent use'} {fromNow(t.at)}</small>
+        </div>
+      ))}
+      {tasks.length === 0 && <p class="text-muted" data-testid="empty">No checklist yet.</p>}
+    </div>
+    <div class="mt-4">
+      <a href="/new" class="btn btn-outline-primary new-button">Add New Title +</a>
+    </div>
+  </div>
+  <script>
+    import { request, toast } from '../lib/toast'
+    document.querySelectorAll<HTMLButtonElement>('[data-delete]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this item ?')) return
+        const res = await request(`/api/tasks/${btn.dataset.delete}`, 'DELETE')
+        if (res.data?.success) {
+          btn.closest('[data-testid="task-row"]')?.remove()
+          toast('Delete it!', 'error')
+        } else {
+          toast(res.data?.error || 'Delete failed.', 'error')
+        }
+      })
+    })
+  </script>
+</Layout>

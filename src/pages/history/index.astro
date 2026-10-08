@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { listSurveys } from '../../lib/repo'
+import { worstStatus, statusColor, statusIcon } from '../../lib/logic'
+import { clock, dayKey, dayLabel } from '../../lib/format'
+
+const page = Number(Astro.url.searchParams.get('p')) || 1
+const rows = await listSurveys(page)
+const days = [...new Set(rows.map(r => dayKey(r.created_at)))]
+---
+<Layout title="History | SURVEY-POS">
+  <div class="container pt-5 pb-3">
+    <h3>History</h3>
+    <small>History group by date and latest 100 rows.</small>
+    <hr />
+    <div data-testid="history">
+      {days.map(day => (
+        <div class="group-history" data-testid="history-day">
+          <h6>{dayLabel(day)}</h6>
+          {rows.filter(r => dayKey(r.created_at) === day).map(r => {
+            const worst = worstStatus({ fail: r.fail, warn: r.warn, info: r.info, pass: r.pass })
+            return (
+              <div class="text-inline" data-testid="history-row" data-status={worst}>
+                <a class="btn btn-sm btn-icon" href={`/history/edit/${r.survey_id}`} aria-label={`Edit ${r.title}`} title="Edit">✎</a>
+                {worst && <span class={`text-${statusColor[worst]}`} aria-label={worst}>{statusIcon[worst]}</span>}
+                <b><a href={`/history/version/${r.survey_id}`}>{r.title}</a></b>
+                <b>at {clock(r.created_at)}</b>
+                {r.fail > 0 && <span class="badge badge-danger">Fail {r.fail}</span>}
+                {r.warn > 0 && <span class="badge badge-warning">Warning {r.warn}</span>}
+                {r.info > 0 && <span class="badge badge-info">Info {r.info}</span>}
+                <small>by {r.editors}</small>
+              </div>
+            )
+          })}
+        </div>
+      ))}
+      {rows.length === 0 && <p class="text-muted" data-testid="empty">No transaction yet.</p>}
+    </div>
+  </div>
+</Layout>

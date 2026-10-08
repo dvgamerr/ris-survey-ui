@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import SurveyForm from '../../components/SurveyForm'
+import { getTask } from '../../lib/repo'
+import { dateTime } from '../../lib/format'
+
+const id = Number(Astro.params.id)
+const task = Number.isInteger(id) && id > 0 ? await getTask(id) : null
+if (!task) return Astro.redirect('/')
+const items = task.items.map(i => ({ ...i, selected: false, problem: false, status: '' as const, reason: '' }))
+---
+<Layout title={`${task.title} | SURVEY-POS`}>
+  <div class="container pt-5 pb-3">
+    <h3 data-testid="task-title">{task.title}</h3>
+    <small>
+      <b>created :</b> {dateTime(task.created_at)}
+      <b>modified :</b> {task.modified_at ? dateTime(task.modified_at) : '-'}
+    </small><br />
+    <SurveyForm client:load mode="new" taskId={task.task_id} items={items} />
+  </div>
+</Layout>

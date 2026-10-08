@@ -1,9 +1,9 @@
 node_modules
 dist
 .astro
-.env
-.env.*
-!.env.example
+.git
+.worktrees
 test-results
 playwright-report
+.env
 *.log

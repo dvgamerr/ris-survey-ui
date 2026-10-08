@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro'
+import AuthForm from '../components/AuthForm'
+---
+<Layout title="Sign-In | SURVEY-POS" bare>
+  <div class="row no-gutters">
+    <div class="sidenav d-none d-md-flex">
+      <div class="login-main-text">
+        <h2>SURVEY<br />POS SERVER</h2>
+        <p>Login or register from here to access.</p>
+      </div>
+    </div>
+    <div class="main col-12">
+      <div class="col-12 col-lg-8 col-xl-6 mx-auto">
+        <AuthForm client:load />
+      </div>
+    </div>
+  </div>
+</Layout>
